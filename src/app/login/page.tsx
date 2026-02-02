@@ -1,6 +1,6 @@
 'use client';
 
-import { FormProvider, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -10,10 +10,16 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { User } from "@/domain/user/user.type";
 import InputPassword from "@/components/ui/input-password";
+import { Form } from "@/components/ui/form";
 
 export default function LoginPage() {
   const router = useRouter();
-  const form = useForm<User>();
+  const form = useForm<User>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+  });
   const { register, handleSubmit, formState: { errors } } = form;
   const onFormSubmit = (data: User) => console.log(data);
 
@@ -26,21 +32,21 @@ export default function LoginPage() {
         </CardHeader>
 
         <CardContent>
-          <form id="loginForm" onSubmit={handleSubmit(onFormSubmit)}>
-            <FieldGroup>
-              <Field data-invalid={!!errors.email}>
-                <InputGroup>
-                  <InputGroupAddon align="inline-start"><EnvelopeIcon/></InputGroupAddon>
-                  <InputGroupInput aria-invalid={!!errors.email} { ...register('email',  { required: 'This field is required' }) } placeholder="Email"/>
-                </InputGroup>
-                <FieldError errors={[errors.email]} />
-              </Field>
+          <Form {...form}>
+            <form id="loginForm" onSubmit={handleSubmit(onFormSubmit)}>
+              <FieldGroup>
+                <Field data-invalid={!!errors.email}>
+                  <InputGroup>
+                    <InputGroupAddon align="inline-start"><EnvelopeIcon/></InputGroupAddon>
+                    <InputGroupInput aria-invalid={!!errors.email} { ...register('email',  { required: 'This field is required' }) } placeholder="Email"/>
+                  </InputGroup>
+                  <FieldError errors={[errors.email]} />
+                </Field>
 
-              <FormProvider {...form}>
                 <InputPassword name="password"></InputPassword>
-              </FormProvider>
-            </FieldGroup>
-          </form>
+              </FieldGroup>
+            </form>
+          </Form>
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
