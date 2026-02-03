@@ -6,9 +6,10 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 type PasswordProps<T extends FieldValues> = PropsWithChildren<{
   name: FieldPath<T>;
+  displayPrependIcon?: boolean;
 }>;
 
-export default function InputPassword<T extends FieldValues>({ name }: PasswordProps<T>) {
+export default function InputPassword<T extends FieldValues>({ name, displayPrependIcon = true }: PasswordProps<T>) {
   const { control } = useFormContext();
   const [ isPasswordShown, setIsPasswordShown ] = useState<boolean>(false);
   return (
@@ -19,7 +20,7 @@ export default function InputPassword<T extends FieldValues>({ name }: PasswordP
       render={({ field, fieldState }) => (
         <FormItem>
           <InputGroup>
-            <InputGroupAddon align="inline-start"><LockClosedIcon/></InputGroupAddon>
+            {displayPrependIcon && <InputGroupAddon align="inline-start"><LockClosedIcon/></InputGroupAddon>}
             <InputGroupInput
               aria-invalid={fieldState.invalid}
               { ...field }
