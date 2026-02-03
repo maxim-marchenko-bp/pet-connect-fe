@@ -4,13 +4,13 @@ import { useForm } from "react-hook-form"
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
-import { Field, FieldError, FieldGroup } from "@/components/ui/field";
+import { FieldGroup } from "@/components/ui/field";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { User } from "@/domain/user/user.type";
 import InputPassword from "@/components/ui/input-password";
-import { Form } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -20,7 +20,7 @@ export default function LoginPage() {
       password: '',
     },
   });
-  const { register, handleSubmit, formState: { errors } } = form;
+  const { handleSubmit} = form;
   const onFormSubmit = (data: User) => console.log(data);
 
   return (
@@ -35,13 +35,18 @@ export default function LoginPage() {
           <Form {...form}>
             <form id="loginForm" onSubmit={handleSubmit(onFormSubmit)}>
               <FieldGroup>
-                <Field data-invalid={!!errors.email}>
-                  <InputGroup>
-                    <InputGroupAddon align="inline-start"><EnvelopeIcon/></InputGroupAddon>
-                    <InputGroupInput aria-invalid={!!errors.email} { ...register('email',  { required: 'This field is required' }) } placeholder="Email"/>
-                  </InputGroup>
-                  <FieldError errors={[errors.email]} />
-                </Field>
+                <FormField
+                  name="email"
+                  rules={{required: 'Email is required'}}
+                  render={({field, fieldState}) => (
+                    <FormItem>
+                      <InputGroup>
+                        <InputGroupAddon align="inline-start"><EnvelopeIcon/></InputGroupAddon>
+                        <InputGroupInput aria-invalid={fieldState.invalid} placeholder="Email" {...field} />
+                      </InputGroup>
+                      <FormMessage/>
+                    </FormItem>
+                  )} />
 
                 <InputPassword name="password"></InputPassword>
               </FieldGroup>
