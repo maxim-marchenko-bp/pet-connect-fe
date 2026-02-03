@@ -5,6 +5,6 @@ export interface User extends BaseModel{
   lastname: string;
   email: string;
   password: string;
-  age?: number;
+  dateOfBirth?: Date | null;
   isActive?: boolean;
 }

@@ -1,12 +1,32 @@
 'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
 import { User } from "@/domain/user/user.type";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { FieldGroup } from "@/components/ui/field";
+import InputPassword from "@/components/ui/input-password";
+import { Input } from "@/components/ui/input";
+import { DatePicker } from "@/components/ui/date-picker";
+
+type RegistrationForm = Pick<User, 'name' | 'lastname' | 'email' | 'password' | 'dateOfBirth'>;
 
 export default function Register() {
-  const { formState: { errors }, register, handleSubmit } = useForm<User>();
+  const router = useRouter();
+  const form = useForm<RegistrationForm>({
+    defaultValues: {
+      name: '',
+      lastname: '',
+      email: '',
+      password: '',
+      dateOfBirth: null,
+    }
+  });
+  const { handleSubmit } = form;
+  const onFormSubmit = (data: RegistrationForm) => console.log(data);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8">
@@ -17,10 +37,59 @@ export default function Register() {
         </CardHeader>
 
         <CardContent>
-          <form id="registrationForm" onSubmit={handleSubmit((data) => console.log(data))}>
+          <Form {...form}>
+            <form id="registrationForm" onSubmit={handleSubmit(onFormSubmit)}>
+              <FieldGroup>
+                <FieldGroup className="flex-row">
+                  <FormField
+                    name="name"
+                    rules={{required: 'Name is required'}}
+                    render={({field, fieldState}) => (
+                      <FormItem>
+                        <Input placeholder="Name" aria-invalid={fieldState.invalid} {...field}></Input>
+                        <FormMessage/>
+                      </FormItem>
+                    )}
+                  />
 
-          </form>
+                  <FormField
+                    name="lastname"
+                    rules={{required: 'Last Name is required'}}
+                    render={({field, fieldState}) => (
+                      <FormItem>
+                        <Input placeholder="Last Name" aria-invalid={fieldState.invalid} {...field}></Input>
+                        <FormMessage/>
+                      </FormItem>
+                    )}
+                  />
+                </FieldGroup>
+
+                <FormField
+                  name="email"
+                  rules={{required: 'Email is required'}}
+                  render={({field, fieldState}) => (
+                    <FormItem>
+                      <Input placeholder="Email" aria-invalid={fieldState.invalid} {...field} />
+                      <FormMessage/>
+                    </FormItem>
+                  )}
+                />
+
+                <InputPassword name="password" displayPrependIcon={false} />
+
+                <DatePicker name="dateOfBirth" />
+              </FieldGroup>
+            </form>
+          </Form>
         </CardContent>
+
+        <CardFooter className="flex-col gap-2">
+          <Button form="registrationForm" type="submit" className="w-full cursor-pointer">Sign Up</Button>
+          <div>
+            <span className="text-sm">Already have an account?</span>
+            <Button variant="link" className="cursor-pointer" onClick={() => router.push('/login')}>Login</Button>
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );

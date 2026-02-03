@@ -12,16 +12,18 @@ import { User } from "@/domain/user/user.type";
 import InputPassword from "@/components/ui/input-password";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 
+type LoginForm = Pick<User, 'email' | 'password'>;
+
 export default function LoginPage() {
   const router = useRouter();
-  const form = useForm<User>({
+  const form = useForm<LoginForm>({
     defaultValues: {
       email: '',
       password: '',
     },
   });
   const { handleSubmit} = form;
-  const onFormSubmit = (data: User) => console.log(data);
+  const onFormSubmit = (data: LoginForm) => console.log(data);
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8">

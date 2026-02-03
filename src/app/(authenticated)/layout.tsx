@@ -1,7 +1,7 @@
 import React from "react";
-import { apiFetch } from "@/lib/apiClient";
-import { UserProvider } from "@/components/UserProvider/UserProvider";
-import { Header } from "@/components/Header/Header";
+import { apiFetch } from "@/lib/api-client";
+import { UserProvider } from "@/components/UserProvider/user-provider";
+import { Header } from "@/components/header/header";
 
 // Force dynamic rendering for authenticated routes
 export const dynamic = 'force-dynamic';
