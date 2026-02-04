@@ -5,7 +5,7 @@ import { PropsWithChildren } from "react";
 import { User } from "@/domain/user/user.type";
 
 interface UserProviderProps extends PropsWithChildren {
-  user: User;
+  user: User | null;
 }
 
 export const UserProvider = ({ children, user }: UserProviderProps) => {

@@ -11,6 +11,8 @@ import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { User } from "@/domain/user/user.type";
 import InputPassword from "@/components/ui/input-password";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { toast } from "sonner";
+import { clientFetch } from "@/lib/api/client-fetch";
 
 type LoginForm = Pick<User, 'email' | 'password'>;
 
@@ -23,7 +25,19 @@ export default function LoginPage() {
     },
   });
   const { handleSubmit} = form;
-  const onFormSubmit = (data: LoginForm) => console.log(data);
+  const onFormSubmit = (data: LoginForm) => {
+    toast.promise(
+      () => clientFetch<void>('/auth/login', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }, false),
+      {
+        loading: 'Logging in...',
+        success: async () => {
+          router.push('/home');
+          return 'Logged in successfully!';
+        },
+        error: (err) => err.message,
+      }
+    );
+  }
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8">

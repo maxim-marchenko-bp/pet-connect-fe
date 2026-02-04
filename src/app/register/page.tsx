@@ -11,6 +11,8 @@ import { FieldGroup } from "@/components/ui/field";
 import InputPassword from "@/components/ui/input-password";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
+import { toast } from "sonner";
+import { clientFetch } from "@/lib/api/client-fetch";
 
 type RegistrationForm = Pick<User, 'name' | 'lastname' | 'email' | 'password' | 'dateOfBirth'>;
 
@@ -26,7 +28,19 @@ export default function Register() {
     }
   });
   const { handleSubmit } = form;
-  const onFormSubmit = (data: RegistrationForm) => console.log(data);
+  const onFormSubmit = async (data: RegistrationForm) => {
+    toast.promise(
+      () => clientFetch<User>('/auth/register', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }, false),
+      {
+        loading: 'Registering user...',
+        success: () => {
+          router.push('/login');
+          return 'User registered successfully!';
+        },
+        error: (err) => err.message,
+      }
+    )
+  };
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8">
