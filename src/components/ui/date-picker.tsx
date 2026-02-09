@@ -11,7 +11,7 @@ import { PropsWithChildren, useState } from "react";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/utils";
 
-interface DatePickerProps extends PropsWithChildren {
+export interface DatePickerProps extends PropsWithChildren {
   name: string;
 }
 
