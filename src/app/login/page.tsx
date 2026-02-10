@@ -13,6 +13,7 @@ import InputPassword from "@/components/ui/input-password";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";
 import { clientFetch } from "@/lib/api/client-fetch";
+import { useMutation } from "@tanstack/react-query";
 
 type LoginForm = Pick<User, 'email' | 'password'>;
 
@@ -24,16 +25,28 @@ export default function LoginPage() {
       password: '',
     },
   });
-  const { handleSubmit} = form;
-  const onFormSubmit = (data: LoginForm) => {
-    toast.promise(
-      () => clientFetch<void>('/auth/login', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }, false),
+  const { handleSubmit, formState: { isDirty } } = form;
+  const login = async (loginForm: LoginForm) => {
+    const body = JSON.stringify(loginForm);
+    return await clientFetch<void>('/auth/login', { method: 'POST', body, headers: { 'Content-Type': 'application/json' } }, false)
+  };
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: login,
+    onSuccess: () => {
+      router.push('/home');
+      toast.success('Logged in successfully!');
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
+  const onFormSubmit = (loginForm: LoginForm) => {
+    return toast.promise(
+      mutateAsync(loginForm),
       {
         loading: 'Logging in...',
-        success: async () => {
-          router.push('/home');
-          return 'Logged in successfully!';
-        },
+        success: 'Logged in successfully!',
         error: (err) => err.message,
       }
     );
@@ -71,7 +84,7 @@ export default function LoginPage() {
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
-          <Button form="loginForm" type="submit" className="w-full cursor-pointer">Login</Button>
+          <Button form="loginForm" type="submit" className="w-full cursor-pointer" disabled={!isDirty || isPending}>Login</Button>
           <div>
             <span className="text-sm">Don&#39;t have an account?</span>
             <Button className="cursor-pointer" variant="link" onClick={() => router.push('/register')}>Sign up</Button>

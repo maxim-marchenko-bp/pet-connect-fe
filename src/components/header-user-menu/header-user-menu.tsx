@@ -1,6 +1,5 @@
 'use client';
 
-import { useContext } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
   DropdownMenu,
@@ -10,13 +9,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { UserContext } from "@/providers/user-provider/user-context";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks/use-user";
 
 export function HeaderUserMenu() {
-  const user = useContext(UserContext);
+  const { user } = useUser();
   const router = useRouter();
   const userInitials = user ? `${user.name.charAt(0)}${user.lastname.charAt(0)}`.toUpperCase() : '';
 
@@ -47,5 +46,5 @@ export function HeaderUserMenu() {
         </DropdownMenuGroup>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }

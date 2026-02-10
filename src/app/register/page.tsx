@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { toast } from "sonner";
 import { clientFetch } from "@/lib/api/client-fetch";
+import { useMutation } from "@tanstack/react-query";
 
 type RegistrationForm = Pick<User, 'name' | 'lastname' | 'email' | 'password' | 'dateOfBirth'>;
 
@@ -27,19 +28,30 @@ export default function Register() {
       dateOfBirth: null,
     }
   });
-  const { handleSubmit } = form;
-  const onFormSubmit = async (data: RegistrationForm) => {
-    toast.promise(
-      () => clientFetch<User>('/auth/register', { method: 'POST', body: JSON.stringify(data), headers: { 'Content-Type': 'application/json' } }, false),
+  const { handleSubmit, formState: { isDirty } } = form;
+  const registerUser = async (registrationForm: RegistrationForm) => {
+    const body = JSON.stringify(registrationForm);
+    return await clientFetch<User>('/auth/register', { method: 'POST', body, headers: { 'Content-Type': 'application/json' } }, false)
+  };
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: registerUser,
+    onSuccess: () => {
+      toast.success('User registered successfully!');
+      router.push('/login');
+    },
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
+  const onFormSubmit = async (registrationForm: RegistrationForm) => {
+    return toast.promise(
+      mutateAsync(registrationForm),
       {
         loading: 'Registering user...',
-        success: () => {
-          router.push('/login');
-          return 'User registered successfully!';
-        },
+        success: 'User registered successfully!',
         error: (err) => err.message,
       }
-    )
+    );
   };
 
   return (
@@ -98,7 +110,7 @@ export default function Register() {
         </CardContent>
 
         <CardFooter className="flex-col gap-2">
-          <Button form="registrationForm" type="submit" className="w-full cursor-pointer">Sign Up</Button>
+          <Button form="registrationForm" type="submit" className="w-full cursor-pointer" disabled={!isDirty || isPending}>Sign Up</Button>
           <div>
             <span className="text-sm">Already have an account?</span>
             <Button variant="link" className="cursor-pointer" onClick={() => router.push('/login')}>Login</Button>

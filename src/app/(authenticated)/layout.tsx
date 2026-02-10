@@ -18,7 +18,7 @@ export default function AuthenticatedLayout({
 }>) {
   const { data = null, isLoading } = useQuery({
     queryKey: ['currentUser'],
-    queryFn: () => clientFetch<User>('/users/me', { method: 'GET' })
+    queryFn: () => clientFetch<User>('/users/me', { method: 'GET' }),
   });
 
   if (isLoading) {
