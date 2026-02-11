@@ -5,7 +5,7 @@ import { User } from "@/domain/user/user.type";
 import { UserContext } from "./user-context";
 
 interface UserProviderProps extends PropsWithChildren {
-  user: User | null;
+  user: User;
 }
 
 export function UserProvider({ children, user: initialUser }: UserProviderProps) {
