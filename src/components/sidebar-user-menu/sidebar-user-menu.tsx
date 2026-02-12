@@ -12,7 +12,7 @@ import { SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "@/components/ui
 import { Logout } from "@/components/logout/logout";
 
 
-export function UserAvatarMenu() {
+export function SidebarUserMenu() {
   const { user } = useUser();
   const initials = user ? `${user.name[0]}${user.lastname[0]}` : '';
 

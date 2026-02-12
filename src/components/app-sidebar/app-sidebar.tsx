@@ -18,7 +18,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import Image from "next/image";
 import { appSidebarMenuItems } from "@/components/app-sidebar/app-sidebar-menu-items";
-import { UserAvatarMenu } from "@/components/user-avatar-menu/user-avatar-menu";
+import { SidebarUserMenu } from "@/components/sidebar-user-menu/sidebar-user-menu";
 
 export function AppSidebar() {
   const router = useRouter();
@@ -56,13 +56,18 @@ export function AppSidebar() {
             <SidebarMenu>
               {
                 appSidebarMenuItems.map(menuItem => (
-                  <SidebarMenuItem key={menuItem.path} className="flex justify-center items-center" onClick={() => router.push(menuItem.path)}>
-                    <SidebarMenuButton asChild isActive={ pathname === menuItem.path }>
+                  <SidebarMenuItem
+                    key={menuItem.path}
+                    className="flex justify-center items-center"
+                  >
+                    <SidebarMenuButton
+                      asChild
+                      isActive={pathname === menuItem.path}
+                      onClick={() => router.push(menuItem.path)}
+                    >
                       <div>
-                        { menuItem.icon && <menuItem.icon /> }
-                        <span>
-                          { menuItem.label }
-                        </span>
+                        {menuItem.icon && <menuItem.icon />}
+                        <span>{ menuItem.label }</span>
                       </div>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -73,7 +78,7 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <UserAvatarMenu />
+        <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
   )
