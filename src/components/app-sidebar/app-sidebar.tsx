@@ -93,13 +93,14 @@ function SubMenuItem({ subItem, pathname, onNavigate }: SubMenuItemProps) {
   );
 }
 
-// Main Component
-export function AppSidebar() {
+interface SidebarMenuItemsProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+function SidebarMenuItems({open, setOpen}: SidebarMenuItemsProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { open, setOpen } = useSidebar();
-  const [isHovered, setIsHovered] = useState(false);
-
   const isMenuItemActive = (menuItem: AppSidebarMenuItem): boolean => {
     if (menuItem.path) {
       return pathname === menuItem.path;
@@ -126,6 +127,49 @@ export function AppSidebar() {
   };
 
   return (
+    <SidebarMenu>
+      {appSidebarMenuItems.map(menuItem => {
+        const subItems = menuItem.items;
+        const hasSubItems = Boolean(subItems?.length);
+
+        return (
+          <SidebarMenuItem
+            key={menuItem.label}
+            className={open ? '' : 'flex justify-center items-center'}
+          >
+            <SidebarMenuButton
+              className={
+                open && hasSubItems
+                  ? 'cursor-default hover:bg-transparent active:bg-transparent'
+                  : 'cursor-pointer'
+              }
+              isActive={isMenuItemActive(menuItem)}
+              onClick={() => handleMenuItemClick(menuItem)}
+            >
+              <MenuItemContent menuItem={menuItem} />
+            </SidebarMenuButton>
+
+            {subItems?.map(subItem => (
+              <SubMenuItem
+                key={subItem.label}
+                subItem={subItem}
+                pathname={pathname}
+                onNavigate={(path) => router.push(path)}
+              />
+            ))}
+          </SidebarMenuItem>
+        );
+      })}
+    </SidebarMenu>
+  )
+}
+
+// Main Component
+export function AppSidebar() {
+  const { open, setOpen } = useSidebar();
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
         {open ? (
@@ -142,40 +186,10 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupLabel>My Page</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {appSidebarMenuItems.map(menuItem => {
-                const subItems = menuItem.items;
-                const hasSubItems = Boolean(subItems?.length);
-
-                return (
-                  <SidebarMenuItem
-                    key={menuItem.label}
-                    className={open ? '' : 'flex justify-center items-center'}
-                  >
-                    <SidebarMenuButton
-                      className={
-                        open && hasSubItems
-                          ? 'cursor-default hover:bg-transparent active:bg-transparent'
-                          : 'cursor-pointer'
-                      }
-                      isActive={isMenuItemActive(menuItem)}
-                      onClick={() => handleMenuItemClick(menuItem)}
-                    >
-                      <MenuItemContent menuItem={menuItem} />
-                    </SidebarMenuButton>
-
-                    {subItems?.map(subItem => (
-                      <SubMenuItem
-                        key={subItem.label}
-                        subItem={subItem}
-                        pathname={pathname}
-                        onNavigate={(path) => router.push(path)}
-                      />
-                    ))}
-                  </SidebarMenuItem>
-                );
-              })}
-            </SidebarMenu>
+            <SidebarMenuItems
+              open={open}
+              setOpen={setOpen}
+            />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
