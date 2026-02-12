@@ -22,97 +22,159 @@ import { useState } from "react";
 import Image from "next/image";
 import { appSidebarMenuItems } from "@/components/app-sidebar/app-sidebar-menu-items";
 import { SidebarUserMenu } from "@/components/sidebar-user-menu/sidebar-user-menu";
+import type { AppSidebarMenuItem } from "@/components/app-sidebar/app-sidebar.type";
 
+// Extracted Components
+function SidebarLogo() {
+  return <Image src='/images/logo.png' alt='logo' width={64} height={64} />;
+}
+
+function SidebarHeaderOpened() {
+  return (
+    <div className="min-h-16 flex items-center justify-between">
+      <SidebarLogo />
+      <SidebarTrigger />
+    </div>
+  );
+}
+
+interface SidebarHeaderCollapsedProps {
+  isHovered: boolean;
+  onMouseEnter: () => void;
+  onMouseLeave: () => void;
+}
+
+function SidebarHeaderCollapsed({ isHovered, onMouseEnter, onMouseLeave }: SidebarHeaderCollapsedProps) {
+  return (
+    <div
+      className="min-h-16 flex items-center justify-center"
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseLeave}
+    >
+      {isHovered ? <SidebarTrigger /> : <SidebarLogo />}
+    </div>
+  );
+}
+
+interface MenuItemContentProps {
+  menuItem: AppSidebarMenuItem;
+}
+
+function MenuItemContent({ menuItem }: MenuItemContentProps) {
+  const Icon = menuItem.icon;
+
+  return (
+    <>
+      {Icon && <Icon />}
+      <span>{menuItem.label}</span>
+    </>
+  );
+}
+
+interface SubMenuItemProps {
+  subItem: AppSidebarMenuItem;
+  pathname: string;
+  onNavigate: (path: string) => void;
+}
+
+function SubMenuItem({ subItem, pathname, onNavigate }: SubMenuItemProps) {
+  return (
+    <SidebarMenuSub>
+      <SidebarMenuSubItem>
+        <SidebarMenuSubButton
+          className="cursor-pointer"
+          isActive={pathname === subItem.path}
+          onClick={() => subItem.path && onNavigate(subItem.path)}
+        >
+          <span>{subItem.label}</span>
+        </SidebarMenuSubButton>
+      </SidebarMenuSubItem>
+    </SidebarMenuSub>
+  );
+}
+
+// Main Component
 export function AppSidebar() {
   const router = useRouter();
   const pathname = usePathname();
   const { open, setOpen } = useSidebar();
   const [isHovered, setIsHovered] = useState(false);
 
-  const logo = <Image src='/images/logo.png' alt='logo' width={64} height={64}/>;
-  const openedContent = (
-    <div className="min-h-16 flex items-center justify-between">
-      {logo}
-      <SidebarTrigger />
-    </div>
-  );
-  const sideBarTriggerItem = isHovered ? <SidebarTrigger /> : logo;
-  const collapsedContent = (
-    <div
-      className="min-h-16 flex items-center justify-center"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {sideBarTriggerItem}
-    </div>
-  );
+  const isMenuItemActive = (menuItem: AppSidebarMenuItem): boolean => {
+    if (menuItem.path) {
+      return pathname === menuItem.path;
+    }
+
+    if (!open && menuItem.items?.length) {
+      return menuItem.items.some(subItem => pathname === subItem.path);
+    }
+
+    return false;
+  };
+
+  const handleMenuItemClick = (menuItem: AppSidebarMenuItem) => {
+    if (menuItem.path) {
+      router.push(menuItem.path);
+      return;
+    }
+
+    const subItems = menuItem.items;
+    if (!open && subItems?.length) {
+      router.push(subItems[0].path);
+      setOpen(true);
+    }
+  };
 
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
-        {open ? openedContent : collapsedContent}
+        {open ? (
+          <SidebarHeaderOpened />
+        ) : (
+          <SidebarHeaderCollapsed
+            isHovered={isHovered}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          />
+        )}
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>My Page</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {
-                appSidebarMenuItems.map(menuItem => {
-                  const subItems = menuItem.items;
-                  return (
-                    <SidebarMenuItem
-                      key={menuItem.label}
-                      className={open ? '' : 'flex justify-center items-center'}
-                    >
-                      <SidebarMenuButton
-                        className={open && subItems?.length ? 'cursor-default hover:bg-transparent active:bg-transparent' : 'cursor-pointer'}
-                        asChild
-                        isActive={
-                          menuItem.path
-                            ? pathname === menuItem.path
-                            : (!open && !!subItems?.find(subItem => pathname === subItem.path))
-                        }
-                        onClick={() => {
-                          if (menuItem.path) {
-                            router.push(menuItem.path!);
-                            return;
-                          }
-                          if (!open && subItems?.length) {
-                            router.push(subItems[0].path);
-                            setOpen(true);
-                            return;
-                          }
-                        }}
-                      >
-                        <div>
-                          {menuItem.icon && <menuItem.icon />}
-                          <span>{menuItem.label}</span>
-                        </div>
-                      </SidebarMenuButton>
+              {appSidebarMenuItems.map(menuItem => {
+                const subItems = menuItem.items;
+                const hasSubItems = Boolean(subItems?.length);
 
-                      {
-                        subItems?.map(subItem => (
-                          <SidebarMenuSub key={subItem.label}>
-                            <SidebarMenuSubItem>
-                              <SidebarMenuSubButton
-                                className="cursor-pointer"
-                                asChild
-                                isActive={pathname === subItem.path}
-                                onClick={() => router.push(subItem.path)}
-                              >
-                                <div>
-                                  <span>{subItem.label}</span>
-                                </div>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          </SidebarMenuSub>
-                        ))
+                return (
+                  <SidebarMenuItem
+                    key={menuItem.label}
+                    className={open ? '' : 'flex justify-center items-center'}
+                  >
+                    <SidebarMenuButton
+                      className={
+                        open && hasSubItems
+                          ? 'cursor-default hover:bg-transparent active:bg-transparent'
+                          : 'cursor-pointer'
                       }
-                    </SidebarMenuItem>
-                  )
-                })
-              }
+                      isActive={isMenuItemActive(menuItem)}
+                      onClick={() => handleMenuItemClick(menuItem)}
+                    >
+                      <MenuItemContent menuItem={menuItem} />
+                    </SidebarMenuButton>
+
+                    {subItems?.map(subItem => (
+                      <SubMenuItem
+                        key={subItem.label}
+                        subItem={subItem}
+                        pathname={pathname}
+                        onNavigate={(path) => router.push(path)}
+                      />
+                    ))}
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -121,5 +183,5 @@ export function AppSidebar() {
         <SidebarUserMenu />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
