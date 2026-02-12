@@ -9,7 +9,12 @@ export const appSidebarMenuItems: AppSidebarMenuItem[] = [
   },
   {
     label: 'Settings',
-    path: '/settings',
     icon: CogIcon,
+    items: [
+      {
+        label: 'Profile',
+        path: '/settings/profile',
+      },
+    ],
   },
 ];
