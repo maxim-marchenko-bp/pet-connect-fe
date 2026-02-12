@@ -1,6 +1,6 @@
 import { FormFieldConfig } from "@/domain/form/form.type";
 
-export const formConfig: FormFieldConfig[] = [
+export const profileSettingsFormConfig: FormFieldConfig[] = [
   {
     name: 'name',
     placeholder: 'Name',
