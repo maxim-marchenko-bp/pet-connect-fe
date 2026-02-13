@@ -3,13 +3,13 @@ import { cn } from "@/lib/utils";
 
 function Page({className, ...props}: ComponentProps<'div'>) {
   return (
-    <div className={cn('p-4', className)} {...props} />
+    <div className={cn('p-4 h-full', className)} {...props} />
   )
 }
 
 function PageHeader({ className, ...props }: ComponentProps<'div'>) {
   return (
-    <div className={cn('mb-6', className)} {...props} />
+    <div className={cn('mb-4', className)} {...props} />
   )
 }
 
@@ -25,9 +25,16 @@ function PageHeaderSubtitle({ className, ...props }: ComponentProps<'span'>) {
   )
 }
 
+function PageFooter({ className, ...props }: ComponentProps<'div'>) {
+  return (
+    <div className={cn('mt-4', className)} {...props} />
+  )
+}
+
 export {
   Page,
   PageHeader,
   PageHeaderTitle,
   PageHeaderSubtitle,
+  PageFooter,
 }

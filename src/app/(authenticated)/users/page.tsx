@@ -1,32 +1,76 @@
 'use client';
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { User } from "@/domain/user/user.type";
 import { Spinner } from "@/components/ui/spinner";
 import { FilteredItems } from "@/lib/api/filtered-items";
-import { Page, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
+import {
+  Page,
+  PageFooter,
+  PageHeader,
+  PageHeaderSubtitle,
+  PageHeaderTitle
+} from "@/components/ui/page";
 import { Separator } from "@/components/ui/separator";
 import { UserItem } from "@/app/(authenticated)/users/user";
 import { EmptyState } from "@/components/ui/empty-state";
+import { AppPagination } from "@/components/app-pagination/app-pagination";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Users() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const page = Number(searchParams.get('page') || 1);
+  const pageSize = Number(searchParams.get('pageSize') || 10);
+
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => clientFetch<FilteredItems<User>>('/users/list', { method: 'POST' }),
+    queryKey: ["users", searchParams.toString()],
+    placeholderData: keepPreviousData,
+    queryFn: ({ queryKey: [_, params] }) =>
+      clientFetch<FilteredItems<User>>(`/users/list?${new URLSearchParams(params)}`, {
+        method: "GET",
+      }),
   });
-  const { items } = data || {};
+
+  const { items, totalCount } = data || {};
+
+  const totalPages = totalCount
+    ? Math.ceil(totalCount / pageSize)
+    : 1;
+
+  const updateParams = (updates: Record<string, string | number>) => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    Object.entries(updates).forEach(([key, value]) => {
+      if (value === "" || value === null || value === undefined) {
+        params.delete(key);
+      } else {
+        params.set(key, String(value));
+      }
+    });
+
+    router.push(`/users?${params.toString()}`);
+  };
 
   if (isLoading) {
-    return <Spinner className="absolute top-1/2 left-1/2 size-8 text-primary"/>
+    return (
+      <Spinner className="absolute top-1/2 left-1/2 size-8 text-primary" />
+    );
   }
 
   if (isError) {
-    return <EmptyState title={'Error loading users'} description={error.message} />
+    return (
+      <EmptyState
+        title="Error loading users"
+        description={(error as Error).message}
+      />
+    );
   }
 
   if (!items || items.length === 0) {
-    return <EmptyState title={'No users found'} />
+    return <EmptyState title="No users found" />;
   }
 
   return (
@@ -36,15 +80,25 @@ export default function Users() {
         <PageHeaderSubtitle>Find people you might know or interested in</PageHeaderSubtitle>
       </PageHeader>
 
-      {
-        items.map((user, idx) => (
+      <div className="space-y-2">
+        {items.map((user, idx) => (
           <div key={user.id}>
             <UserItem user={user} />
-            { (idx !== items.length - 1) && <Separator />}
+            {idx !== items.length - 1 && <Separator />}
           </div>
-        ))
-      }
-    </Page>
+        ))}
+      </div>
 
-  )
+      <PageFooter>
+        <AppPagination
+          currentPage={page}
+          totalPages={totalPages}
+          onPageChange={(newPage) => {
+            if (newPage < 1 || newPage > totalPages) return;
+            updateParams({ page: newPage });
+          }}
+        />
+      </PageFooter>
+    </Page>
+  );
 }
