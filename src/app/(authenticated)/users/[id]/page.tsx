@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { User } from "@/domain/user/user.type";
 import { Spinner } from "@/components/ui/spinner";
-import { ErrorPage } from "@/components/ui/error-page";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -20,7 +20,7 @@ export default function UserPage() {
   }
 
   if (isError) {
-    return <ErrorPage errorMessage={'Error loading user'} error={error} />
+    return <EmptyState title={'Error loading user'} description={error.message} />
   }
 
   return (

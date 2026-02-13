@@ -6,14 +6,11 @@ import { User } from "@/domain/user/user.type";
 import { Spinner } from "@/components/ui/spinner";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { Page, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
-import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
-import Link from "next/link";
-import { ErrorPage } from "@/components/ui/error-page";
+import { UserItem } from "@/app/(authenticated)/users/user";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function Users() {
-  const [userLocale] = useState(() => Intl.DateTimeFormat().resolvedOptions().locale ?? 'en-GB');
-
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ['users'],
     queryFn: () => clientFetch<FilteredItems<User>>('/users/list', { method: 'POST' }),
@@ -25,11 +22,11 @@ export default function Users() {
   }
 
   if (isError) {
-    return <ErrorPage errorMessage={'Error loading users'} error={error} />
+    return <EmptyState title={'Error loading users'} description={error.message} />
   }
 
   if (!items || items.length === 0) {
-    return <ErrorPage errorMessage={'No users found'} />
+    return <EmptyState title={'No users found'} />
   }
 
   return (
@@ -42,19 +39,7 @@ export default function Users() {
       {
         items.map((user, idx) => (
           <div key={user.id}>
-            <div className="p-4 w-3/6">
-              <div>
-                <Link
-                  className="p-0 text-[16px] font-semibold text-primary"
-                  href={`/users/${user.id}`}
-                >{user.name} {user.lastname}</Link>
-              </div>
-              <div>
-                <div>
-                  <span className="text-[12px]">Date of birth: {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString(userLocale, { dateStyle: 'medium' }) : '-'}</span>
-                </div>
-              </div>
-            </div>
+            <UserItem user={user} />
             { (idx !== items.length - 1) && <Separator />}
           </div>
         ))
