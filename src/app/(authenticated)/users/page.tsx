@@ -13,7 +13,7 @@ import {
   PageHeaderTitle
 } from "@/components/ui/page";
 import { Separator } from "@/components/ui/separator";
-import { UserItem } from "@/app/(authenticated)/users/user";
+import { UserListItem } from "@/app/(authenticated)/users/user-list-item";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -64,7 +64,7 @@ export default function Users() {
     return (
       <EmptyState
         title="Error loading users"
-        description={(error as Error).message}
+        description={error.message}
       />
     );
   }
@@ -83,7 +83,7 @@ export default function Users() {
       <div className="space-y-2">
         {items.map((user, idx) => (
           <div key={user.id}>
-            <UserItem user={user} />
+            <UserListItem user={user} />
             {idx !== items.length - 1 && <Separator />}
           </div>
         ))}

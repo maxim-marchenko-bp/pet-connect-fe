@@ -8,7 +8,7 @@ interface UserProps {
   user: IUser;
 }
 
-export function UserItem({ user }: UserProps) {
+export function UserListItem({ user }: UserProps) {
   const userLocale = useUserLocale();
 
   return (
@@ -24,7 +24,10 @@ export function UserItem({ user }: UserProps) {
       <div>
         <div>
           <span className="text-[12px]">
-            Date of birth: {user.dateOfBirth ? new Date(user.dateOfBirth).toLocaleDateString(userLocale, { dateStyle: 'medium' }) : '-'}
+            Date of birth: {
+            user.dateOfBirth
+              ? new Date(user.dateOfBirth).toLocaleDateString(userLocale, { dateStyle: 'medium' })
+              : '-'}
           </span>
         </div>
       </div>
