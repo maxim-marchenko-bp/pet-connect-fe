@@ -12,18 +12,18 @@ import {
   PageHeaderSubtitle,
   PageHeaderTitle
 } from "@/components/ui/page";
-import { Separator } from "@/components/ui/separator";
-import { UserListItem } from "@/app/(authenticated)/users/user-list-item";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { useRouter, useSearchParams } from "next/navigation";
+import { UserList } from "@/app/(authenticated)/users/components/user-list";
+import { UsersFilterForm } from "@/app/(authenticated)/users/components/user-filter";
 
 export default function Users() {
   const router = useRouter();
   const searchParams = useSearchParams();
-
   const page = Number(searchParams.get('page') || 1);
   const pageSize = Number(searchParams.get('pageSize') || 10);
+  const searchTerm = searchParams.get('searchTerm') || '';
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["users", searchParams.toString()],
@@ -34,7 +34,7 @@ export default function Users() {
       }),
   });
 
-  const { items, totalCount } = data || {};
+  const { items = [], totalCount } = data || {};
 
   const totalPages = totalCount
     ? Math.ceil(totalCount / pageSize)
@@ -69,10 +69,6 @@ export default function Users() {
     );
   }
 
-  if (!items || items.length === 0) {
-    return <EmptyState title="No users found" />;
-  }
-
   return (
     <Page>
       <PageHeader>
@@ -81,22 +77,15 @@ export default function Users() {
       </PageHeader>
 
       <div className="space-y-2">
-        {items.map((user, idx) => (
-          <div key={user.id}>
-            <UserListItem user={user} />
-            {idx !== items.length - 1 && <Separator />}
-          </div>
-        ))}
+        <UsersFilterForm formValue={{ searchTerm }} totalCount={totalCount} onFilterFormSubmit={updateParams} />
+        <UserList users={items} />
       </div>
 
       <PageFooter>
         <AppPagination
           currentPage={page}
           totalPages={totalPages}
-          onPageChange={(newPage) => {
-            if (newPage < 1 || newPage > totalPages) return;
-            updateParams({ page: newPage });
-          }}
+          onPageChange={(page) => updateParams({ page })}
         />
       </PageFooter>
     </Page>

@@ -70,7 +70,10 @@ export function AppPagination({ currentPage, totalPages, onPageChange }: AppPagi
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(currentPage - 1);
+              const prevPage = currentPage - 1;
+              if (prevPage >= 1) {
+                onPageChange(prevPage);
+              }
             }}
           />
         </PaginationItem>
@@ -89,7 +92,7 @@ export function AppPagination({ currentPage, totalPages, onPageChange }: AppPagi
                     isActive={currentPage === page}
                     onClick={(e) => {
                       e.preventDefault();
-                      onPageChange(page as number);
+                      onPageChange(page);
                     }}
                   >
                     {page}
@@ -105,7 +108,10 @@ export function AppPagination({ currentPage, totalPages, onPageChange }: AppPagi
             href="#"
             onClick={(e) => {
               e.preventDefault();
-              onPageChange(currentPage + 1);
+              const nextPage = currentPage + 1;
+              if (nextPage <= totalPages) {
+                onPageChange(nextPage);
+              }
             }}
           />
         </PaginationItem>
