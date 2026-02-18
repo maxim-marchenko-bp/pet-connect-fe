@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
+import "../styles/globals.css";
 import React from "react";
 import { Toaster } from "@/components/ui/sonner";
 import { QueryClientProviderWrapper } from "@/providers/query-client-provider/query-client-provider";

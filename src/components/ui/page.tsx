@@ -1,5 +1,5 @@
 import { ComponentProps } from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/class-name/class-name";
 
 function Page({className, ...props}: ComponentProps<'div'>) {
   return (
@@ -25,9 +25,15 @@ function PageHeaderSubtitle({ className, ...props }: ComponentProps<'span'>) {
   )
 }
 
+function PageContent({ className, ...props }: ComponentProps<'div'>) {
+  return (
+    <div className={cn('mb-4', className)} {...props} />
+  )
+}
+
 function PageFooter({ className, ...props }: ComponentProps<'div'>) {
   return (
-    <div className={cn('mt-4', className)} {...props} />
+    <div className={cn(className)} {...props} />
   )
 }
 
@@ -36,5 +42,6 @@ export {
   PageHeader,
   PageHeaderTitle,
   PageHeaderSubtitle,
+  PageContent,
   PageFooter,
 }

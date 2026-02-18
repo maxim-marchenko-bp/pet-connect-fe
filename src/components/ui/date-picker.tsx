@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/popover";
 import { PropsWithChildren, useState } from "react";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { cn } from "@/lib/utils";
+import { cn } from "@/lib/class-name/class-name";
 
 export interface DatePickerProps extends PropsWithChildren {
   name: string;

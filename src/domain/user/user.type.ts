@@ -1,4 +1,5 @@
 import { BaseModel } from "@/domain/base/base.type";
+import { Gender } from "@/domain/gender/gender.enum";
 
 export interface User extends BaseModel{
   name: string;
@@ -7,4 +8,5 @@ export interface User extends BaseModel{
   password: string;
   dateOfBirth?: Date | null;
   isActive?: boolean;
+  gender: Gender;
 }

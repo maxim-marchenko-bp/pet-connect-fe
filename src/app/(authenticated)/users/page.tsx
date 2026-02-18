@@ -6,7 +6,7 @@ import { User } from "@/domain/user/user.type";
 import { Spinner } from "@/components/ui/spinner";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import {
-  Page,
+  Page, PageContent,
   PageFooter,
   PageHeader,
   PageHeaderSubtitle,
@@ -76,10 +76,10 @@ export default function Users() {
         <PageHeaderSubtitle>Find people you might know or interested in</PageHeaderSubtitle>
       </PageHeader>
 
-      <div className="space-y-2">
+      <PageContent>
         <UsersFilterForm formValue={{ searchTerm }} totalCount={totalCount} onFilterFormSubmit={updateParams} />
         <UserList users={items} />
-      </div>
+      </PageContent>
 
       <PageFooter>
         <AppPagination
