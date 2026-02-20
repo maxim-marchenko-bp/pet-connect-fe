@@ -1,7 +1,7 @@
 'use client';
 
 import { PropsWithChildren, useState } from "react";
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import { UserContext } from "./user-context";
 
 interface UserProviderProps extends PropsWithChildren {

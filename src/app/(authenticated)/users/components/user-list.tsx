@@ -1,4 +1,4 @@
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import { EmptyState } from "@/components/ui/empty-state";
 import { UserListItem } from "@/app/(authenticated)/users/components/user-list-item";
 import { Separator } from "@/components/ui/separator";

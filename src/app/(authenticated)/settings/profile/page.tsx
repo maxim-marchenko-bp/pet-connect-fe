@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import { FieldGroup } from "@/components/ui/field";
 import { profileSettingsFormConfig } from "@/app/(authenticated)/settings/profile/profile-settings-form";
 import { FormFieldRenderer } from "@/lib/form/form-field-renderer";

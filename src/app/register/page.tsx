@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useForm } from "react-hook-form";
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";

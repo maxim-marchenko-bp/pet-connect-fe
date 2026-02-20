@@ -1,7 +1,7 @@
 'use client';
 
 import React from "react";
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { UserProvider } from "@/providers/user-provider/user-provider";
 import { useQuery } from "@tanstack/react-query";

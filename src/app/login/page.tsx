@@ -8,7 +8,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import InputPassword from "@/components/ui/input-password";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { toast } from "sonner";

@@ -1,5 +1,6 @@
 import { BaseModel } from "@/domain/base/base.type";
 import { Gender } from "@/domain/gender/gender.enum";
+import { Pet } from "@/domain/pet/pet.model";
 
 export interface User extends BaseModel{
   name: string;
@@ -9,4 +10,5 @@ export interface User extends BaseModel{
   dateOfBirth?: Date | null;
   isActive?: boolean;
   gender: Gender;
+  pets?: Pet[];
 }

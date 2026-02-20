@@ -2,11 +2,12 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { User } from "@/domain/user/user.type";
+import { User } from "@/domain/user/user.model";
 import { Spinner } from "@/components/ui/spinner";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import {
-  Page, PageContent,
+  Page,
+  PageContent,
   PageFooter,
   PageHeader,
   PageHeaderSubtitle,
@@ -14,24 +15,39 @@ import {
 } from "@/components/ui/page";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { UserList } from "@/app/(authenticated)/users/components/user-list";
 import { UsersFilterForm } from "@/app/(authenticated)/users/components/user-filter";
+import { useUser } from "@/hooks/use-user";
+import { buildSearchParams } from "@/lib/search-params/build-search-params";
+import { updateSearchParams } from "@/lib/search-params/update-search-params";
+import { useMemo } from "react";
 
 export default function Users() {
   const router = useRouter();
+  const pathname = usePathname();
+  const { user } = useUser();
+  const userId = user?.id;
   const searchParams = useSearchParams();
   const page = Number(searchParams.get('page') || 1);
   const pageSize = Number(searchParams.get('pageSize') || 10);
   const searchTerm = searchParams.get('searchTerm') || '';
 
+  const queryParams = useMemo(() => ({
+    page,
+    pageSize,
+    searchTerm,
+    excludeIds: userId ? [userId] : [],
+  }), [page, pageSize, searchTerm, userId]);
+
   const { data, isLoading, isError, error } = useQuery({
-    queryKey: ["users", searchParams.toString()],
+    queryKey: ["users", queryParams],
     placeholderData: keepPreviousData,
-    queryFn: ({ queryKey: [_, params] }) =>
-      clientFetch<FilteredItems<User>>(`/users/list?${new URLSearchParams(params)}`, {
-        method: "GET",
-      }),
+    queryFn: () =>
+      clientFetch<FilteredItems<User>>(
+        `/users/list?${buildSearchParams(queryParams)}`,
+        { method: "GET" }
+      ),
   });
 
   const { items = [], totalCount } = data || {};
@@ -39,20 +55,6 @@ export default function Users() {
   const totalPages = totalCount
     ? Math.ceil(totalCount / pageSize)
     : 1;
-
-  const updateParams = (updates: Record<string, string | number>) => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    Object.entries(updates).forEach(([key, value]) => {
-      if (value === "" || value === null || value === undefined) {
-        params.delete(key);
-      } else {
-        params.set(key, String(value));
-      }
-    });
-
-    router.push(`/users?${params.toString()}`);
-  };
 
   if (isLoading) {
     return (
@@ -77,7 +79,11 @@ export default function Users() {
       </PageHeader>
 
       <PageContent>
-        <UsersFilterForm formValue={{ searchTerm }} totalCount={totalCount} onFilterFormSubmit={updateParams} />
+        <UsersFilterForm
+          formValue={{ searchTerm }}
+          totalCount={totalCount}
+          onFilterFormSubmit={(filterParams) => updateSearchParams(pathname, filterParams, searchParams, router)}
+        />
         <UserList users={items} />
       </PageContent>
 
@@ -85,7 +91,7 @@ export default function Users() {
         <AppPagination
           currentPage={page}
           totalPages={totalPages}
-          onPageChange={(page) => updateParams({ page })}
+          onPageChange={(page) => updateSearchParams(pathname, { page }, searchParams, router)}
         />
       </PageFooter>
     </Page>

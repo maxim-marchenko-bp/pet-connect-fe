@@ -1,7 +1,7 @@
 'use client';
 
 import Link from "next/link";
-import { User as IUser } from "@/domain/user/user.type";
+import { User as IUser } from "@/domain/user/user.model";
 import { useFormattedDate } from "@/hooks/use-formatted-date";
 
 interface UserProps {
