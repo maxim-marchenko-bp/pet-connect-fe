@@ -37,7 +37,7 @@ export default function Users() {
     page,
     pageSize,
     searchTerm,
-    excludeIds: userId ? [userId] : [],
+    excludeIds: [userId],
   }), [page, pageSize, searchTerm, userId]);
 
   const { data, isLoading, isError, error } = useQuery({
