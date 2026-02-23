@@ -1,4 +1,4 @@
-export const buildSearchParams = (params: Record<string, any>) => {
+export const buildSearchParams = (params: Record<string, string | number | (string | number)[]>) => {
   const search = new URLSearchParams();
 
   Object.entries(params).forEach(([key, value]) => {
