@@ -11,12 +11,14 @@ import { Page, PageContent, PageFooter, PageHeader, PageHeaderSubtitle, PageHead
 import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
 import { PetsList } from "@/app/(authenticated)/pets/components/pets-list";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
+import { Spinner } from "@/components/ui/spinner";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default function PetsPage() {
   const { id } = useParams();
   const [queryParams, setQueryParams] = useUrlSearchParams();
   const { page, pageSize, searchTerm } = queryParams;
-  const { data } = useQuery({
+  const { data, isLoading, isError, error } = useQuery({
     queryKey: ['userPets', queryParams],
     queryFn: () => clientFetch<FilteredItems<Pet>>(`/users/${id}/pets/list?${buildSearchParams(queryParams)}`),
   });
@@ -24,6 +26,21 @@ export default function PetsPage() {
   const totalPages = totalCount
     ? Math.ceil(totalCount / pageSize)
     : 1;
+
+  if (isLoading) {
+    return (
+      <Spinner className="absolute top-1/2 left-1/2 size-8 text-primary" />
+    );
+  }
+
+  if (isError) {
+    return (
+      <EmptyState
+        title="Error loading users"
+        description={error.message}
+      />
+    );
+  }
 
   return (
     <Page>
@@ -33,7 +50,7 @@ export default function PetsPage() {
       </PageHeader>
 
       <PageContent>
-        <ListFilterForm formValue={{ searchTerm }} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
+        <ListFilterForm formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
         <PetsList pets={items} />
       </PageContent>
 
@@ -41,7 +58,7 @@ export default function PetsPage() {
         <AppPagination
           currentPage={page}
           totalPages={totalPages}
-          onPageChange={(page) => setQueryParams({ page })}
+          onPageChange={(page) => setQueryParams({page})}
         />
       </PageFooter>
     </Page>
