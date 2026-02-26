@@ -7,7 +7,7 @@ interface PetCardProps {
   pet: Pet;
 }
 
-export function PetCard({ pet }: PetCardProps) {
+export function UserInfoPetCard({ pet }: PetCardProps) {
 
   return (
     <Card className="flex-1/5">

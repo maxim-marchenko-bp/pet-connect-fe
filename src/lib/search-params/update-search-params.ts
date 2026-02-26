@@ -1,11 +1,8 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 
 export const updateSearchParams = (
-  pathname: string,
   updates: Record<string, string | number>,
   searchParams: ReadonlyURLSearchParams,
-  router: AppRouterInstance
 ) => {
   const params = new URLSearchParams(searchParams.toString());
 
@@ -17,5 +14,5 @@ export const updateSearchParams = (
     }
   });
 
-  router.push(`${pathname}?${params.toString()}`);
+  return params;
 };

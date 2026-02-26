@@ -15,20 +15,16 @@ import {
 } from "@/components/ui/page";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
-import { usePathname, useRouter } from "next/navigation";
 import { UserList } from "@/app/(authenticated)/users/components/user-list";
-import { UsersFilterForm } from "@/app/(authenticated)/users/components/user-filter";
 import { useUser } from "@/hooks/use-user";
 import { buildSearchParams } from "@/lib/search-params/build-search-params";
-import { updateSearchParams } from "@/lib/search-params/update-search-params";
 import { useUrlSearchParams } from "@/hooks/use-url-search-params";
+import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
 
 export default function Users() {
-  const router = useRouter();
-  const pathname = usePathname();
   const { user } = useUser();
   const userId = user?.id;
-  const { searchParams, queryParams } = useUrlSearchParams({ excludeIds: [userId] });
+  const [queryParams, setUrlQueryParams] = useUrlSearchParams({ excludeIds: [userId] });
   const { page, pageSize, searchTerm } = queryParams;
 
   const { data, isLoading, isError, error } = useQuery({
@@ -70,10 +66,10 @@ export default function Users() {
       </PageHeader>
 
       <PageContent>
-        <UsersFilterForm
+        <ListFilterForm
           formValue={{ searchTerm }}
           totalCount={totalCount}
-          onFilterFormSubmit={(filterParams) => updateSearchParams(pathname, filterParams, searchParams, router)}
+          onFilterFormSubmit={(filterParams) => setUrlQueryParams(filterParams)}
         />
         <UserList users={items} />
       </PageContent>
@@ -82,7 +78,7 @@ export default function Users() {
         <AppPagination
           currentPage={page}
           totalPages={totalPages}
-          onPageChange={(page) => updateSearchParams(pathname, { page }, searchParams, router)}
+          onPageChange={(page) => setUrlQueryParams({ page })}
         />
       </PageFooter>
     </Page>

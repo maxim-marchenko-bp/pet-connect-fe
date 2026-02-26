@@ -13,7 +13,7 @@ interface FilterProps {
   onFilterFormSubmit: (updates: Record<string, string | number>) => void;
 }
 
-export function UsersFilterForm({formValue, totalCount, onFilterFormSubmit}: FilterProps) {
+export function ListFilterForm({formValue, totalCount, onFilterFormSubmit}: FilterProps) {
   const filterForm = useForm<{searchTerm: string}>({
     defaultValues: {
       searchTerm: formValue.searchTerm || '',
