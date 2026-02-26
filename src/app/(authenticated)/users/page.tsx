@@ -15,30 +15,21 @@ import {
 } from "@/components/ui/page";
 import { EmptyState } from "@/components/ui/empty-state";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { UserList } from "@/app/(authenticated)/users/components/user-list";
 import { UsersFilterForm } from "@/app/(authenticated)/users/components/user-filter";
 import { useUser } from "@/hooks/use-user";
 import { buildSearchParams } from "@/lib/search-params/build-search-params";
 import { updateSearchParams } from "@/lib/search-params/update-search-params";
-import { useMemo } from "react";
+import { useUrlSearchParams } from "@/hooks/use-url-search-params";
 
 export default function Users() {
   const router = useRouter();
   const pathname = usePathname();
   const { user } = useUser();
   const userId = user?.id;
-  const searchParams = useSearchParams();
-  const page = Number(searchParams.get('page') || 1);
-  const pageSize = Number(searchParams.get('pageSize') || 10);
-  const searchTerm = searchParams.get('searchTerm') || '';
-
-  const queryParams = useMemo(() => ({
-    page,
-    pageSize,
-    searchTerm,
-    excludeIds: [userId],
-  }), [page, pageSize, searchTerm, userId]);
+  const { searchParams, queryParams } = useUrlSearchParams({ excludeIds: [userId] });
+  const { page, pageSize, searchTerm } = queryParams;
 
   const { data, isLoading, isError, error } = useQuery({
     queryKey: ["users", queryParams],

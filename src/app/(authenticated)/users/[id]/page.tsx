@@ -14,6 +14,7 @@ import { useFormattedDate } from "@/hooks/use-formatted-date";
 import { titleCase } from "@/lib/text-transform/titlecase";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { Pet } from "@/domain/pet/pet.model";
+import { PetList } from "@/app/(authenticated)/pets/components/pet-list";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -67,19 +68,7 @@ export default function UserPage() {
         <div>
           <Card className="w-full">
             <CardContent>
-              {
-                !pets?.items.length
-                  ? <EmptyState title={'No pets assigned to this user'}/>
-                  : (
-                    <div className="flex flex-col gap-2">
-                      {pets.items.map(pet => (
-                        <div key={pet.id} className="flex items-center gap-2">
-                          <span>{pet.name}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )
-              }
+              <PetList pets={pets?.items} totalCount={pets?.totalCount}></PetList>
             </CardContent>
           </Card>
         </div>
