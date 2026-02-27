@@ -1,11 +1,6 @@
 'use client';
 
 import { useParams } from "next/navigation";
-import { useUrlSearchParams } from "@/hooks/use-url-search-params";
-import { useQuery } from "@tanstack/react-query";
-import { clientFetch } from "@/lib/api/client-fetch";
-import { buildSearchParams } from "@/lib/search-params/build-search-params";
-import { FilteredItems } from "@/lib/api/filtered-items";
 import { Pet } from "@/domain/pet/pet.model";
 import { Page, PageContent, PageFooter, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
 import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
@@ -13,19 +8,20 @@ import { PetsList } from "@/app/(authenticated)/pets/components/pets-list";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { Spinner } from "@/components/ui/spinner";
 import { EmptyState } from "@/components/ui/empty-state";
+import { useParamsDataLoader } from "@/hooks/params-data-loader";
 
 export default function PetsPage() {
   const { id } = useParams();
-  const [queryParams, setQueryParams] = useUrlSearchParams();
-  const { page, pageSize, searchTerm } = queryParams;
-  const { data, isLoading, isError, error } = useQuery({
-    queryKey: ['userPets', queryParams],
-    queryFn: () => clientFetch<FilteredItems<Pet>>(`/users/${id}/pets/list?${buildSearchParams(queryParams)}`),
+  const {
+    data,
+    isLoading,
+    error,
+    params: { searchTerm, totalCount, totalPages, page },
+    setQueryParams
+  } = useParamsDataLoader<Pet>({
+    path: `/users/${id}/pets/list`,
+    queryKey: ['userPets']
   });
-  const { items = [], totalCount } = data || {};
-  const totalPages = totalCount
-    ? Math.ceil(totalCount / pageSize)
-    : 1;
 
   if (isLoading) {
     return (
@@ -33,7 +29,7 @@ export default function PetsPage() {
     );
   }
 
-  if (isError) {
+  if (error) {
     return (
       <EmptyState
         title="Error loading users"
@@ -51,7 +47,7 @@ export default function PetsPage() {
 
       <PageContent>
         <ListFilterForm formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
-        <PetsList pets={items} />
+        <PetsList pets={data} />
       </PageContent>
 
       <PageFooter>
