@@ -1,5 +1,5 @@
 import { AppSidebarMenuItem } from "@/components/app-sidebar/app-sidebar.type";
-import { CogIcon, HomeIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { CogIcon, HeartIcon, HomeIcon, UserGroupIcon } from "@heroicons/react/24/outline";
 
 export const appSidebarMenuItems: AppSidebarMenuItem[] = [
   {
@@ -11,6 +11,11 @@ export const appSidebarMenuItems: AppSidebarMenuItem[] = [
     label: 'People',
     path: '/users',
     icon: UserGroupIcon,
+  },
+  {
+    label: 'Pets',
+    path: '/pets',
+    icon: HeartIcon,
   },
   {
     label: 'Settings',
