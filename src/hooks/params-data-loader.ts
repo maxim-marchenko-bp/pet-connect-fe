@@ -4,11 +4,9 @@
   import { FilteredItems } from "@/lib/api/filtered-items";
   import { buildSearchParams } from "@/lib/search-params/build-search-params";
   import { useMemo } from "react";
+  import { QueryOptions } from "@/domain/query-options/query-options.model";
 
-  export function useParamsDataLoader<T>(
-    { path, queryKey, searchParams }:
-    { path: string; queryKey: any[], searchParams?: Record<string, string | number | (string | number)[]> }
-  ) {
+  export function useParamsDataLoader<T>({ path, queryKey, searchParams }: QueryOptions) {
     const [queryParams, setQueryParams] = useUrlSearchParams(searchParams);
     const { page, pageSize, searchTerm } = queryParams;
     const { data, isLoading, isError, error } = useQuery({
