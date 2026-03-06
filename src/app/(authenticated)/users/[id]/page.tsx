@@ -15,6 +15,7 @@ import { titleCase } from "@/lib/text-transform/titlecase";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { Pet } from "@/domain/pet/pet.model";
 import { UserInfoPetsList } from "@/app/(authenticated)/users/components/user-info-pets-list";
+import { LabelValue } from "@/components/label-value/label-value";
 
 export default function UserPage() {
   const { id } = useParams();
@@ -59,8 +60,8 @@ export default function UserPage() {
 
           <Card className="w-full">
             <CardContent className="text-[14px] flex flex-col gap-2">
-              <span>Date of birth: {user.dateOfBirth ? formattedDate(user.dateOfBirth) : '-'}</span>
-              <span>Sex: <span>{titleCase(user.gender)}</span></span>
+              <LabelValue label={'Date of birth'} gridCols={2}>{user.dateOfBirth ? formattedDate(user.dateOfBirth) : '-'}</LabelValue>
+              <LabelValue label={'Gender'} gridCols={2}>{titleCase(user.gender)}</LabelValue>
             </CardContent>
           </Card>
         </div>
