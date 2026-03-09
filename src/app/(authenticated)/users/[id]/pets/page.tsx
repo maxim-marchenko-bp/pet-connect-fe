@@ -9,7 +9,7 @@ export default function PetsPage() {
   const queryOptions = useMemo(() => (
     {
       path: `/users/${id}/pets/list`,
-      queryKey: ['userPets']
+      queryKey: ['userPets', id as string]
     }
   ), [id]);
 

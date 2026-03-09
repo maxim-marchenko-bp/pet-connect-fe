@@ -3,8 +3,8 @@
 import { Pet } from "@/domain/pet/pet.model";
 import { EmptyState } from "@/components/ui/empty-state";
 import { UserInfoPetCard } from "@/app/(authenticated)/users/components/user-info-pet-card";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { InfoPageItemsList } from "@/components/info-page-items-list/info-page-items-list";
 
 interface PetListProps {
   pets?: Pet[];
@@ -18,24 +18,11 @@ export function UserInfoPetsList({ pets, totalCount = 0 }: PetListProps) {
   }
 
   return (
-    <div>
-      <div className="flex justify-between gap-16">
-        {
-          pets.map(pet => (
-            <UserInfoPetCard key={pet.id} pet={pet} />
-          ))
-        }
-      </div>
-      {
-        (totalCount > pets.length) &&
-        <div className="flex justify-end mt-6">
-          <Link
-            href={{pathname: `${pathname}/pets`}}
-            className="p-0 text-[16px] font-semibold text-primary"
-          >See more</Link>
-        </div>
-      }
-    </div>
-
+    <InfoPageItemsList
+      items={pets}
+      seeMoreHref={`${pathname}/pets`}
+      totalCount={totalCount}
+      itemComponent={({item}) => <UserInfoPetCard pet={item} /> }
+    />
   )
 }
