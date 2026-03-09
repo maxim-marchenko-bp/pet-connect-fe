@@ -19,14 +19,15 @@ import { LabelValue } from "@/components/label-value/label-value";
 
 export default function UserPage() {
   const { id } = useParams();
+  const userId = id as string;
   const formattedDate = useFormattedDate();
   const { data: user, isLoading: isUserLoading, isError: isUserError, error: userError } = useQuery({
-    queryKey: ['user', id],
-    queryFn: () => clientFetch<User>(`/users/${id}`),
+    queryKey: ['user', userId],
+    queryFn: () => clientFetch<User>(`/users/${userId}`),
   });
   const { data: pets } = useQuery({
-    queryKey: ['userPets', id],
-    queryFn: () => clientFetch<FilteredItems<Pet>>(`/users/${id}/pets/list?pageSize=4`),
+    queryKey: ['userPets', userId],
+    queryFn: () => clientFetch<FilteredItems<Pet>>(`/users/${userId}/pets/list?pageSize=4`),
   });
 
   if (isUserLoading) {

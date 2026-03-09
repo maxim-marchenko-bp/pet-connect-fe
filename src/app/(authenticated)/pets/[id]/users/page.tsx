@@ -1,20 +1,19 @@
 'use client';
 
-import { useUser } from "@/hooks/use-user";
+import { useParams } from "next/navigation";
 import { UsersPageList } from "@/app/(authenticated)/users/components/users-page-list";
 import { useMemo } from "react";
 
-export default function Users() {
-  const { user } = useUser();
+export default function PetUsersPage() {
+  const { id } = useParams();
   const queryOptions = useMemo(() => (
     {
-      path: '/users/list',
-      queryKey: ['users'],
-      searchParams: { excludeIds: [user.id]}
+      path: `/pets/${id}/users/list`,
+      queryKey: ['petUsers', id as string]
     }
-  ), [user.id]);
+  ), [id]);
 
   return (
     <UsersPageList {...queryOptions} />
-  );
+  )
 }
