@@ -25,7 +25,7 @@ export default function UserPage() {
     queryKey: ['user', userId],
     queryFn: () => clientFetch<User>(`/users/${userId}`),
   });
-  const { data: pets } = useQuery({
+  const { data: pets, isLoading: isPetsLoading, isError: isPetsError, error: petsError } = useQuery({
     queryKey: ['userPets', userId],
     queryFn: () => clientFetch<FilteredItems<Pet>>(`/users/${userId}/pets/list?pageSize=4`),
   });
@@ -70,7 +70,9 @@ export default function UserPage() {
         <div>
           <Card className="w-full">
             <CardContent>
-              <UserInfoPetsList pets={pets?.items} totalCount={pets?.totalCount}></UserInfoPetsList>
+              {isPetsLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}
+              {isPetsError && petsError && <EmptyState title={'Error loading pets'} description={petsError.message} />}
+              {!isPetsLoading && !isPetsError && <UserInfoPetsList pets={pets?.items} totalCount={pets?.totalCount}></UserInfoPetsList>}
             </CardContent>
           </Card>
         </div>
