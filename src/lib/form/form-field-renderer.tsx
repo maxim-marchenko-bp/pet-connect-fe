@@ -3,11 +3,14 @@ import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DatePicker, DatePickerProps } from "@/components/ui/date-picker";
 import { FormFieldConfig } from "@/domain/form/form.type";
+import InputPassword, { PasswordProps } from "@/components/ui/input-password";
+import { FieldValues } from "react-hook-form";
 
 export function FormFieldRenderer({ formConfig }: PropsWithChildren<{ formConfig: FormFieldConfig[] }>) {
   const inputByType: Record<string, (props: any) => ReactElement> = {
     text: (props: PropsWithChildren) => <Input {...props} />,
-    date: (props: DatePickerProps) => <DatePicker {...props} />
+    date: (props: DatePickerProps) => <DatePicker {...props} />,
+    password: (props: PasswordProps<FieldValues>) => <InputPassword {...props} />
   };
 
   return (
@@ -22,7 +25,7 @@ export function FormFieldRenderer({ formConfig }: PropsWithChildren<{ formConfig
           render={({field, fieldState}) => (
             <FormItem>
               <InputComponent placeholder={item.placeholder} {...field} aria-invalid={fieldState.invalid}/>
-              <FormMessage/>
+              {!item.hideComponentMessage && <FormMessage/>}
             </FormItem>
           )}
         />

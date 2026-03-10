@@ -1,22 +1,24 @@
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { EyeIcon, EyeSlashIcon, LockClosedIcon } from "@heroicons/react/24/outline";
 import { PropsWithChildren, useState } from "react";
-import { FieldPath, FieldValues, useFormContext } from "react-hook-form";
+import { FieldPath, FieldValues, RegisterOptions, useFormContext } from "react-hook-form";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 
-type PasswordProps<T extends FieldValues> = PropsWithChildren<{
+export type PasswordProps<T extends FieldValues> = PropsWithChildren<{
   name: FieldPath<T>;
   displayPrependIcon?: boolean;
+  placeholder?: string;
+  rules?: RegisterOptions;
 }>;
 
-export default function InputPassword<T extends FieldValues>({ name, displayPrependIcon = true }: PasswordProps<T>) {
+export default function InputPassword<T extends FieldValues>({ name, displayPrependIcon = true, placeholder = 'Password', rules }: PasswordProps<T>) {
   const { control } = useFormContext();
   const [ isPasswordShown, setIsPasswordShown ] = useState<boolean>(false);
   return (
     <FormField
       control={control}
       name={name}
-      rules={{required: "Password is required"}}
+      rules={rules ?? {required: `${placeholder} is required`}}
       render={({ field, fieldState }) => (
         <FormItem>
           <InputGroup>
@@ -24,7 +26,7 @@ export default function InputPassword<T extends FieldValues>({ name, displayPrep
             <InputGroupInput
               aria-invalid={fieldState.invalid}
               { ...field }
-              placeholder="Password"
+              placeholder={placeholder}
               type={ isPasswordShown ? 'text' : 'password' }/>
             <InputGroupAddon align="inline-end">
               {
@@ -37,5 +39,6 @@ export default function InputPassword<T extends FieldValues>({ name, displayPrep
           <FormMessage />
         </FormItem>
       )}
-      />)
+    />
+  )
 }
