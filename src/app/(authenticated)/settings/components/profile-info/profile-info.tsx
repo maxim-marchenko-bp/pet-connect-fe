@@ -10,9 +10,8 @@ import { profileInfoFormConfig } from "@/app/(authenticated)/settings/components
 import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
 import { Button } from "@/components/ui/button";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { toast } from "sonner";
-import { useMutation } from "@tanstack/react-query";
 import { useUser } from "@/hooks/use-user";
+import { useFormMutation } from "@/hooks/use-form-mutation";
 
 export function ProfileInfo() {
   const { user, setUser } = useUser();
@@ -25,46 +24,39 @@ export function ProfileInfo() {
     },
   });
   const { handleSubmit, formState: { isDirty }, reset } = profileInfoForm;
+
   const updateUserInfo = async (userData: User) => {
     if (user) {
       return await clientFetch<User>(`/users/${user.id}`, { body: JSON.stringify(userData), method: 'PUT', headers: { 'Content-Type': 'application/json' } });
     }
   };
 
-  const { mutateAsync, isPending } = useMutation({
+  const { handleSubmit: onFormSubmit, isPending } = useFormMutation({
     mutationFn: updateUserInfo,
-    onSuccess: (user: User | undefined) => {
-      if (user) {
-        setUser(user);
-        toast.success('Profile updated successfully');
+    onSuccess: (updatedUser) => {
+      if (updatedUser) {
+        setUser(updatedUser);
       }
     },
-    onError: (error, user) => {
-      toast.error(error.message);
+    onError: (error, userData) => {
       reset(
         {
-          name: user.name,
-          lastname: user.lastname,
-          email: user.email,
-          dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
+          name: userData.name,
+          lastname: userData.lastname,
+          email: userData.email,
+          dateOfBirth: userData.dateOfBirth ? new Date(userData.dateOfBirth) : null,
         },
         {
           keepDirty: true,
         }
-      )
+      );
+    },
+    messages: {
+      loading: 'Updating profile...',
+      success: 'Profile updated successfully!',
+      error: (err) => err.message,
     },
   });
-
-  const onFormSubmit = (userData: User) => {
-    return toast.promise(
-      mutateAsync(userData),
-      {
-        loading: 'Updating profile...',
-        success: 'Profile updated successfully!',
-        error: (err) => err.message,
-      }
-    )
-  }
 
   useEffect(() => {
     if (user) {
