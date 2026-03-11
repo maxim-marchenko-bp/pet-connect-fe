@@ -8,7 +8,7 @@ import { FieldValues } from "react-hook-form";
 
 export function FormFieldRenderer({ formConfig }: PropsWithChildren<{ formConfig: FormFieldConfig[] }>) {
   const inputByType: Record<string, (props: any) => ReactElement> = {
-    text: (props: PropsWithChildren) => <Input {...props} />,
+    text: (props: PropsWithChildren) => <FormItem><Input {...props} /><FormMessage /></FormItem>,
     date: (props: DatePickerProps) => <DatePicker {...props} />,
     password: (props: PasswordProps<FieldValues>) => <InputPassword {...props} />
   };
@@ -25,7 +25,6 @@ export function FormFieldRenderer({ formConfig }: PropsWithChildren<{ formConfig
           render={({field, fieldState}) => (
             <FormItem>
               <InputComponent placeholder={item.placeholder} {...field} aria-invalid={fieldState.invalid}/>
-              {!item.hideComponentMessage && <FormMessage/>}
             </FormItem>
           )}
         />
