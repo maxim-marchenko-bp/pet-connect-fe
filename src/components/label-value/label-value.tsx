@@ -15,8 +15,15 @@ const SIZES_CLASSES = {
   large: 'text-lg',
 };
 
+const GRID_COLS: Record<number, string> = {
+  1: 'grid grid-cols-1',
+  2: 'grid grid-cols-2',
+  3: 'grid grid-cols-3',
+  4: 'grid grid-cols-4',
+};
+
 export function LabelValue({ label, children, size = 'small', gridCols }: PropsWithChildren<LabelValueProps>) {
-  const gridColsClass = useMemo(() => gridCols ? `grid grid-cols-${gridCols}` : '', [gridCols]);
+  const gridColsClass = useMemo(() => gridCols ? `${GRID_COLS[gridCols]}` : '', [gridCols]);
   return (
     <div className={cn(SIZES_CLASSES[size], gridColsClass)}>
       {label && <span className='mr-2 text-gray-500'>{label}:</span>}
