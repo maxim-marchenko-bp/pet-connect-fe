@@ -11,9 +11,8 @@ import { FieldGroup } from "@/components/ui/field";
 import InputPassword from "@/components/ui/input-password";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
-import { toast } from "sonner";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { useMutation } from "@tanstack/react-query";
+import { useFormMutation } from "@/hooks/use-form-mutation";
 
 type RegistrationForm = Pick<User, 'name' | 'lastname' | 'email' | 'password' | 'dateOfBirth'>;
 
@@ -33,26 +32,17 @@ export default function Register() {
     const body = JSON.stringify(registrationForm);
     return await clientFetch<User>('/auth/register', { method: 'POST', body, headers: { 'Content-Type': 'application/json' } }, false)
   };
-  const { mutateAsync, isPending } = useMutation({
+  const {handleSubmit: handleFormSubmit, isPending} = useFormMutation({
     mutationFn: registerUser,
     onSuccess: () => {
-      toast.success('User registered successfully!');
       router.push('/login');
     },
-    onError: (err: Error) => {
-      toast.error(err.message);
+    messages: {
+      loading: 'Registering user...',
+      success: 'User registered successfully!',
+      error: (err) => err.message,
     },
-  });
-  const onFormSubmit = async (registrationForm: RegistrationForm) => {
-    return toast.promise(
-      mutateAsync(registrationForm),
-      {
-        loading: 'Registering user...',
-        success: 'User registered successfully!',
-        error: (err) => err.message,
-      }
-    );
-  };
+  })
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8">
@@ -64,7 +54,7 @@ export default function Register() {
 
         <CardContent>
           <Form {...form}>
-            <form id="registrationForm" onSubmit={handleSubmit(onFormSubmit)}>
+            <form id="registrationForm" onSubmit={handleSubmit(handleFormSubmit)}>
               <FieldGroup>
                 <FieldGroup className="flex-row">
                   <FormField

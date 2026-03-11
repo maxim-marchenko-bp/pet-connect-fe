@@ -11,9 +11,8 @@ import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { User } from "@/domain/user/user.model";
 import InputPassword from "@/components/ui/input-password";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
-import { toast } from "sonner";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { useMutation } from "@tanstack/react-query";
+import { useFormMutation } from "@/hooks/use-form-mutation";
 
 type LoginForm = Pick<User, 'email' | 'password'>;
 
@@ -30,27 +29,17 @@ export default function LoginPage() {
     const body = JSON.stringify(loginForm);
     return await clientFetch<void>('/auth/login', { method: 'POST', body, headers: { 'Content-Type': 'application/json' } }, false)
   };
-  const { mutateAsync, isPending } = useMutation({
+  const { handleSubmit: handleFormSubmit, isPending } = useFormMutation({
     mutationFn: login,
     onSuccess: () => {
       router.push('/home');
-      toast.success('Logged in successfully!');
     },
-    onError: (error) => {
-      toast.error(error.message);
-    },
+     messages: {
+       loading: 'Logging in...',
+       success: 'Logged in successfully!',
+       error: (err) => err.message,
+     },
   });
-
-  const onFormSubmit = (loginForm: LoginForm) => {
-    return toast.promise(
-      mutateAsync(loginForm),
-      {
-        loading: 'Logging in...',
-        success: 'Logged in successfully!',
-        error: (err) => err.message,
-      }
-    );
-  }
 
   return (
     <div className="min-h-screen w-full flex items-center justify-center p-8">
@@ -62,7 +51,7 @@ export default function LoginPage() {
 
         <CardContent>
           <Form {...form}>
-            <form id="loginForm" onSubmit={handleSubmit(onFormSubmit)}>
+            <form id="loginForm" onSubmit={handleSubmit(handleFormSubmit)}>
               <FieldGroup>
                 <FormField
                   name="email"
