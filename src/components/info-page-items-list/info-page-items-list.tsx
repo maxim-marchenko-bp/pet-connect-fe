@@ -20,7 +20,7 @@ export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, see
 
   return (
     <div>
-      <div className="flex justify-between gap-16">
+      <div className="grid grid-cols-4 gap-16">
         {
           items.map((item, index) => (
             <ItemComponent key={index} item={item} />

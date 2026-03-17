@@ -7,7 +7,7 @@ import { clientFetch } from "@/lib/api/client-fetch";
 import { User } from "@/domain/user/user.model";
 import { Spinner } from "@/components/ui/spinner";
 import { EmptyState } from "@/components/ui/empty-state";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import Image from "next/image";
 import { Gender } from "@/domain/gender/gender.enum";
 import { useFormattedDate } from "@/hooks/use-formatted-date";
@@ -70,6 +70,7 @@ export default function UserPage() {
         <div>
           <Card className="w-full">
             <CardContent>
+              <CardTitle className="mb-4">Pets</CardTitle>
               {isPetsLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}
               {isPetsError && petsError && <EmptyState title={'Error loading pets'} description={petsError.message} />}
               {!isPetsLoading && !isPetsError && <UserInfoPetsList pets={pets?.items} totalCount={pets?.totalCount}></UserInfoPetsList>}

@@ -1,7 +1,7 @@
 'use client';
 
 import { LabelValue } from "@/components/label-value/label-value";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Page, PageContent } from "@/components/ui/page";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -60,6 +60,7 @@ export default function PetPage() {
 
         <Card className="w-full">
           <CardContent>
+            <CardTitle className="mb-4">Owners</CardTitle>
             {isUsersLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}
             {isUsersError && usersError && <EmptyState title={'Error loading users'} description={usersError.message} />}
             {!isUsersLoading && !isUsersError && <PetInfoUsersList users={users?.items} totalCount={users?.totalCount} />}
