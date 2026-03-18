@@ -1,7 +1,7 @@
 'use client';
 
 import { LabelValue } from "@/components/label-value/label-value";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Page, PageContent } from "@/components/ui/page";
 import Image from "next/image";
 import { useParams } from "next/navigation";
@@ -12,7 +12,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { User } from "@/domain/user/user.model";
 import { FilteredItems } from "@/lib/api/filtered-items";
-import { PetInfoUsersList } from "@/app/(authenticated)/pets/components/pet-info-users-list";
+import { PetDetailsUsers } from "@/app/(authenticated)/pets/components/pet-details-users";
 
 export default function PetPage() {
   const { id } = useParams();
@@ -23,7 +23,7 @@ export default function PetPage() {
     queryFn: () => clientFetch<Pet>(`/pets/${petId}`),
   });
 
-  const { data: users, isLoading: isUsersLoading, isError: isUsersError, error: usersError } = useQuery({
+  const usersQuery = useQuery({
     queryKey: ['petUsers', petId],
     queryFn: () => clientFetch<FilteredItems<User>>(`/pets/${petId}/users/list?pageSize=4`),
   })
@@ -58,14 +58,7 @@ export default function PetPage() {
           </Card>
         </div>
 
-        <Card className="w-full">
-          <CardContent>
-            <CardTitle className="mb-4">Owners</CardTitle>
-            {isUsersLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}
-            {isUsersError && usersError && <EmptyState title={'Error loading users'} description={usersError.message} />}
-            {!isUsersLoading && !isUsersError && <PetInfoUsersList users={users?.items} totalCount={users?.totalCount} />}
-          </CardContent>
-        </Card>
+        <PetDetailsUsers usersQuery={usersQuery} />
       </PageContent>
     </Page>
   )

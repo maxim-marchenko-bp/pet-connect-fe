@@ -13,7 +13,7 @@ import { User } from "@/domain/user/user.model";
 import { Pet } from "@/domain/pet/pet.model";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { UseQueryResult } from "@tanstack/react-query";
-import { UserDetailsPets } from "@/components/user-details-pets/user-details-pets";
+import { UserDetailsPets } from "@/app/(authenticated)/users/components/user-details-pets";
 
 interface UserPageProps {
   userQuery: Partial<UseQueryResult<User>>;
