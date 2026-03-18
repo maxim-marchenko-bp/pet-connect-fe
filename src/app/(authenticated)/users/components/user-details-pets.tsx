@@ -12,9 +12,10 @@ import { Button } from "@/components/ui/button";
 interface UserDetailsPetsProps {
   petsQuery: Partial<UseQueryResult<FilteredItems<Pet>>>;
   canAddPets?: boolean;
+  handleAddPet?: () => void;
 }
 
-export function UserDetailsPets({ petsQuery, canAddPets }: UserDetailsPetsProps) {
+export function UserDetailsPets({ petsQuery, canAddPets, handleAddPet }: UserDetailsPetsProps) {
   const { data: pets, isLoading, isError, error } = petsQuery;
 
   return (
@@ -23,7 +24,7 @@ export function UserDetailsPets({ petsQuery, canAddPets }: UserDetailsPetsProps)
         <CardTitle className="mb-4">
           <div className="flex justify-between items-center min-h-8">
             <span>Pets</span>
-            {canAddPets && <Button size="sm" className="ml-4">Add Pet</Button>}
+            {canAddPets && <Button size="sm" className="ml-4" onClick={handleAddPet}>Add Pet</Button>}
           </div>
         </CardTitle>
         {isLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}

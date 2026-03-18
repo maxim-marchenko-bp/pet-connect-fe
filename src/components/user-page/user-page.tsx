@@ -14,6 +14,8 @@ import { Pet } from "@/domain/pet/pet.model";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { UseQueryResult } from "@tanstack/react-query";
 import { UserDetailsPets } from "@/app/(authenticated)/users/components/user-details-pets";
+import { useCallback } from "react";
+import { useRouter } from "next/navigation";
 
 interface UserPageProps {
   userQuery: Partial<UseQueryResult<User>>;
@@ -23,8 +25,13 @@ interface UserPageProps {
 
 export function UserPage({ userQuery, petsQuery, canAddPets }: UserPageProps ) {
   const formattedDate = useFormattedDate();
+  const router = useRouter();
 
   const { data: user, isLoading: isUserLoading, isError: isUserError, error: userError } = userQuery;
+
+  const handleAddPet = useCallback(() => {
+    router.push('/pets/new');
+  }, [router]);
 
   if (isUserLoading) {
     return <Spinner className="absolute top-1/2 left-1/2 size-8 text-primary"/>
@@ -64,7 +71,7 @@ export function UserPage({ userQuery, petsQuery, canAddPets }: UserPageProps ) {
         </div>
 
         <div>
-          <UserDetailsPets petsQuery={petsQuery} canAddPets={canAddPets} />
+          <UserDetailsPets petsQuery={petsQuery} canAddPets={canAddPets} handleAddPet={handleAddPet} />
         </div>
       </PageContent>
     </Page>

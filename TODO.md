@@ -2,7 +2,7 @@
 
 ## Create pet
 
-- [ ] Add "Create pet" / "Add pet" button in user profile
+- [x] Add "Create pet" / "Add pet" button in user profile
 - [ ] Implement pet information form with fields:
   - [ ] Name
   - [ ] Type (dog, cat, etc.)
