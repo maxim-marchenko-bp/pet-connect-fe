@@ -18,9 +18,10 @@ import { UserDetailsPets } from "@/components/user-details-pets/user-details-pet
 interface UserPageProps {
   userQuery: Partial<UseQueryResult<User>>;
   petsQuery: Partial<UseQueryResult<FilteredItems<Pet>>>;
+  canAddPets?: boolean;
 }
 
-export function UserPage({ userQuery, petsQuery }: UserPageProps ) {
+export function UserPage({ userQuery, petsQuery, canAddPets }: UserPageProps ) {
   const formattedDate = useFormattedDate();
 
   const { data: user, isLoading: isUserLoading, isError: isUserError, error: userError } = userQuery;
@@ -63,7 +64,7 @@ export function UserPage({ userQuery, petsQuery }: UserPageProps ) {
         </div>
 
         <div>
-          <UserDetailsPets petsQuery={petsQuery} canAddPets={true} />
+          <UserDetailsPets petsQuery={petsQuery} canAddPets={canAddPets} />
         </div>
       </PageContent>
     </Page>

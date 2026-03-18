@@ -17,6 +17,6 @@ export default function HomePage() {
   });
 
   return (
-    <UserPage petsQuery={petsQuery} userQuery={{data: user}} />
+    <UserPage petsQuery={petsQuery} userQuery={{data: user}} canAddPets={true} />
   )
 }

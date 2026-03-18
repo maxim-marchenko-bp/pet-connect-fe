@@ -21,7 +21,7 @@ export function UserDetailsPets({ petsQuery, canAddPets }: UserDetailsPetsProps)
     <Card className="w-full">
       <CardContent>
         <CardTitle className="mb-4">
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center min-h-8">
             <span>Pets</span>
             {canAddPets && <Button size="sm" className="ml-4">Add Pet</Button>}
           </div>
