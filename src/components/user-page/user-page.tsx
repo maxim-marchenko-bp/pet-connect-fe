@@ -4,16 +4,16 @@ import { Spinner } from "@/components/ui/spinner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Gender } from "@/domain/gender/gender.enum";
 import { Page, PageContent } from "@/components/ui/page";
-import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import Image from "next/image";
 import { LabelValue } from "@/components/label-value/label-value";
 import { titleCase } from "@/lib/text-transform/titlecase";
-import { UserInfoPetsList } from "@/app/(authenticated)/users/components/user-info-pets-list";
 import { useFormattedDate } from "@/hooks/use-formatted-date";
 import { User } from "@/domain/user/user.model";
 import { Pet } from "@/domain/pet/pet.model";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { UseQueryResult } from "@tanstack/react-query";
+import { UserDetailsPets } from "@/components/user-details-pets/user-details-pets";
 
 interface UserPageProps {
   userQuery: Partial<UseQueryResult<User>>;
@@ -24,7 +24,6 @@ export function UserPage({ userQuery, petsQuery }: UserPageProps ) {
   const formattedDate = useFormattedDate();
 
   const { data: user, isLoading: isUserLoading, isError: isUserError, error: userError } = userQuery;
-  const { data: pets, isLoading: isPetsLoading, isError: isPetsError, error: petsError } = petsQuery;
 
   if (isUserLoading) {
     return <Spinner className="absolute top-1/2 left-1/2 size-8 text-primary"/>
@@ -64,14 +63,7 @@ export function UserPage({ userQuery, petsQuery }: UserPageProps ) {
         </div>
 
         <div>
-          <Card className="w-full">
-            <CardContent>
-              <CardTitle className="mb-4">Pets</CardTitle>
-              {isPetsLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}
-              {isPetsError && petsError && <EmptyState title={'Error loading pets'} description={petsError.message} />}
-              {!isPetsLoading && !isPetsError && <UserInfoPetsList pets={pets?.items} totalCount={pets?.totalCount}></UserInfoPetsList>}
-            </CardContent>
-          </Card>
+          <UserDetailsPets petsQuery={petsQuery} canAddPets={true} />
         </div>
       </PageContent>
     </Page>
