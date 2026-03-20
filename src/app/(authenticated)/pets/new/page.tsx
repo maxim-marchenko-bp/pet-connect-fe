@@ -11,6 +11,10 @@ import { Form } from "@/components/ui/form";
 import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
 import { petFormConfig } from "@/app/(authenticated)/pets/constants/pet-form";
 import { Button } from "@/components/ui/button";
+import { FieldGroup } from "@/components/ui/field";
+import { useQuery } from "@tanstack/react-query";
+import { FormFieldConfig } from "@/domain/form/form.type";
+import { PetType } from "@/domain/pet/pet-type.model";
 
 export default function NewPetPage() {
   const router = useRouter();
@@ -23,6 +27,22 @@ export default function NewPetPage() {
     },
   });
   const { handleSubmit } = form;
+  const { data: petTypes, isLoading } = useQuery({
+    queryKey: ['pet-types'],
+    queryFn: () => clientFetch<PetType[]>('/pet-types'),
+  });
+
+  const petFormFields = petFormConfig.map(field => {
+    if (field.name === 'type') {
+      return {
+        ...field,
+        selectOptions: petTypes?.map(type => ({ value: type.code, label: type.label })),
+        isLoading,
+      } as FormFieldConfig
+    } else {
+      return field;
+    }
+  })
 
   const createPet = async (formValue: Pet) => {
     const body = JSON.stringify(formValue);
@@ -47,11 +67,15 @@ export default function NewPetPage() {
       </PageHeader>
 
       <PageContent>
-        <Card>
+        <Card className="p-6">
           <Form {...form}>
             <form onSubmit={handleSubmit(handleFormSubmit)}>
-              <FormFieldRenderer formConfig={petFormConfig} />
-              <Button type="submit">Create pet</Button>
+              <FieldGroup>
+                <FormFieldRenderer formConfig={petFormFields} />
+              </FieldGroup>
+              <div className="mt-4 flex justify-end">
+                <Button type="submit">Create pet</Button>
+              </div>
             </form>
           </Form>
         </Card>
