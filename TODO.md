@@ -3,18 +3,14 @@
 ## Create pet
 
 - [x] Add "Create pet" / "Add pet" button in user profile
-- [ ] Implement pet information form with fields:
-  - [ ] Name
-  - [ ] Type (dog, cat, etc.)
-  - [ ] Breed
-  - [ ] Age
-  - [ ] Gender
-  - [ ] Photo / avatar
-  - [ ] Additional notes
+- [x] Implement pet information form with fields:
+  - [x] Name
+  - [x] Type (dog, cat, etc.)
+  - [x] Age
 
 ## Pet management
 
-- [ ] Add pet to profile (persist to backend)
+- [x] Add pet to profile (persist to backend)
 - [ ] Remove pet from profile
 - [ ] Edit pet information
 - [ ] View pet information (profile & detail view)
