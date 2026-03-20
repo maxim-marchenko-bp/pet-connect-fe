@@ -15,15 +15,17 @@ import { FieldGroup } from "@/components/ui/field";
 import { useQuery } from "@tanstack/react-query";
 import { FormFieldConfig } from "@/domain/form/form.type";
 import { PetType } from "@/domain/pet/pet-type.model";
+import { useUser } from "@/hooks/use-user";
 
 export default function NewPetPage() {
+  const { user } = useUser();
   const router = useRouter();
   const form = useForm<Pet>({
     defaultValues: {
       name: '',
       dateOfBirth: null,
       type: undefined,
-      users: [],
+      users: [user],
     },
   });
   const { handleSubmit } = form;
@@ -42,7 +44,7 @@ export default function NewPetPage() {
     } else {
       return field;
     }
-  })
+  });
 
   const createPet = async (formValue: Pet) => {
     const body = JSON.stringify(formValue);
