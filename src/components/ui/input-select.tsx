@@ -19,30 +19,37 @@ export function InputSelect<T extends FieldValues>({ name, selectOptions, rules,
     <FormField
       name={name}
       rules={rules}
-      render={({ field, fieldState }) => (
-        <FormItem>
-          <Select {...field} onValueChange={(v) => field.onChange(v)}>
-            <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
-              <SelectValue placeholder={placeholder} />
-            </SelectTrigger>
+      render={({ field, fieldState }) => {
+        return (
+          <FormItem>
+            <Select
+              {...field}
+              onValueChange={field.onChange}
+              defaultValue={field.value}
+              value={field.value}
+            >
+              <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
+                <SelectValue placeholder={placeholder} />
+              </SelectTrigger>
 
-            <SelectContent position="popper">
-              <SelectGroup>
-                {
-                  isLoading
-                  ? <SelectItem value={'option1'} className="pointer-events-none flex justify-center">
-                      <Spinner />
-                    </SelectItem>
-                  : selectOptions?.map((option) =>
-                      <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
-                    )
-                }
-              </SelectGroup>
-            </SelectContent>
-          </Select>
-          <FormMessage />
-        </FormItem>
-      )}
+              <SelectContent position="popper">
+                <SelectGroup>
+                  {
+                    isLoading
+                      ? <SelectItem value={'option1'} className="pointer-events-none flex justify-center">
+                        <Spinner />
+                      </SelectItem>
+                      : selectOptions?.map((option) =>
+                        <SelectItem key={option.value} value={option.value}>{option.label}</SelectItem>
+                      )
+                  }
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        )
+      }}
     />
   )
 }

@@ -12,6 +12,10 @@ import { Button } from "@/components/ui/button";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { useUser } from "@/hooks/use-user";
 import { useFormMutation } from "@/hooks/use-form-mutation";
+import { useQuery } from "@tanstack/react-query";
+import { Gender } from "@/domain/gender/gender.enum";
+import { FormFieldConfig } from "@/domain/form/form.type";
+import { titleCase } from "@/lib/text-transform/titlecase";
 
 export function ProfileInfo() {
   const { user, setUser } = useUser();
@@ -21,6 +25,7 @@ export function ProfileInfo() {
       lastname: '',
       email: '',
       dateOfBirth: null,
+      gender: undefined,
     },
   });
   const { handleSubmit, formState: { isDirty }, reset } = profileInfoForm;
@@ -30,6 +35,21 @@ export function ProfileInfo() {
       return await clientFetch<User>(`/users/${user.id}`, { body: JSON.stringify(userData), method: 'PUT', headers: { 'Content-Type': 'application/json' } });
     }
   };
+  const { data: genders, isLoading } = useQuery({
+    queryKey: ['genders'],
+    queryFn: () => clientFetch<Gender[]>('/genders'),
+  });
+  const profileInfoFormConfigPopulated = profileInfoFormConfig.map(field => {
+    if (field.name === 'gender') {
+      return {
+        ...field,
+        selectOptions: genders?.map(gender => ({ value: gender, label: titleCase(gender) })),
+        isLoading,
+      } as FormFieldConfig
+    } else {
+      return field;
+    }
+  });
 
   const { handleSubmit: onFormSubmit, isPending } = useFormMutation({
     mutationFn: updateUserInfo,
@@ -45,6 +65,7 @@ export function ProfileInfo() {
           lastname: userData.lastname,
           email: userData.email,
           dateOfBirth: userData.dateOfBirth ? new Date(userData.dateOfBirth) : null,
+          gender: userData.gender,
         },
         {
           keepDirty: true,
@@ -60,15 +81,19 @@ export function ProfileInfo() {
 
   useEffect(() => {
     if (user) {
-      reset({
-          name: user.name,
-          lastname: user.lastname,
-          email: user.email,
-          dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
-        },
-        {
-          keepDirty: false
-        });
+      // TODO revisit this to refactor
+      setTimeout(() => {
+        reset({
+            name: user.name,
+            lastname: user.lastname,
+            email: user.email,
+            dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
+            gender: user.gender,
+          },
+          {
+            keepDirty: false
+          });
+      })
     }
   }, [user, reset]);
 
@@ -83,7 +108,7 @@ export function ProfileInfo() {
         <Form {...profileInfoForm}>
           <form id="profileInfoForm" onSubmit={handleSubmit(onFormSubmit)}>
             <FieldGroup>
-              <FormFieldRenderer formConfig={profileInfoFormConfig} />
+              <FormFieldRenderer formConfig={profileInfoFormConfigPopulated} />
             </FieldGroup>
           </form>
         </Form>
