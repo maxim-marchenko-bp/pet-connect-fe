@@ -10,19 +10,21 @@ import {
 import { PropsWithChildren, useState } from "react";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/class-name/class-name";
+import { RegisterOptions } from "react-hook-form";
 
 export interface DatePickerProps extends PropsWithChildren {
   name: string;
+  rules?: RegisterOptions;
 }
 
-export function DatePicker({ name }: DatePickerProps) {
+export function DatePicker({ name, rules }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [userLocale] = useState(() => Intl.DateTimeFormat().resolvedOptions().locale ?? 'en-GB');
 
   return (
     <FormField
       name={name}
-      rules={{required: 'Date of birth is required'}}
+      rules={rules}
       render={({field, fieldState}) => (
         <FormItem>
           <Popover open={open} onOpenChange={setOpen}>

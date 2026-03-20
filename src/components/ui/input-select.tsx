@@ -19,10 +19,10 @@ export function InputSelect<T extends FieldValues>({ name, selectOptions, rules,
     <FormField
       name={name}
       rules={rules}
-      render={({ field }) => (
+      render={({ field, fieldState }) => (
         <FormItem>
           <Select {...field} onValueChange={(v) => field.onChange(v)}>
-            <SelectTrigger className="w-full">
+            <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
               <SelectValue placeholder={placeholder} />
             </SelectTrigger>
 

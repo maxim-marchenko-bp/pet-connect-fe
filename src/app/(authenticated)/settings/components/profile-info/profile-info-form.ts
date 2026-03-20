@@ -23,5 +23,6 @@ export const profileInfoFormConfig: FormFieldConfig[] = [
     name: 'dateOfBirth',
     placeholder: 'Date of Birth',
     type: 'date',
+    rules: { required: 'Date of birth is required' },
   },
 ];
