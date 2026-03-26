@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactElement } from "react";
 import { DatePicker, DatePickerProps } from "@/components/ui/date-picker";
 import { FormFieldConfig } from "@/domain/form/form.type";
-import InputPassword, { PasswordProps } from "@/components/ui/input-password";
+import { InputPassword, PasswordProps } from "@/components/ui/input-password";
 import { FieldValues } from "react-hook-form";
 import { InputSelect, InputSelectProps } from "@/components/ui/input-select";
 import { InputText, InputTextProps } from "@/components/ui/input-text";

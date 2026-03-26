@@ -9,7 +9,7 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { User } from "@/domain/user/user.model";
-import InputPassword from "@/components/ui/input-password";
+import { InputPassword } from "@/components/ui/input-password";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { useFormMutation } from "@/hooks/use-form-mutation";

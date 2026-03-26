@@ -11,7 +11,7 @@ export type PasswordProps<T extends FieldValues> = PropsWithChildren<{
   rules?: RegisterOptions;
 }>;
 
-export default function InputPassword<T extends FieldValues>({ name, displayPrependIcon = true, placeholder = 'Password', rules }: PasswordProps<T>) {
+export function InputPassword<T extends FieldValues>({ name, displayPrependIcon = true, placeholder = 'Password', rules }: PasswordProps<T>) {
   const { control } = useFormContext();
   const [ isPasswordShown, setIsPasswordShown ] = useState<boolean>(false);
   return (

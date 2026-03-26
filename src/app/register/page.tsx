@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { Form, FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { FieldGroup } from "@/components/ui/field";
-import InputPassword from "@/components/ui/input-password";
+import { InputPassword } from "@/components/ui/input-password";
 import { Input } from "@/components/ui/input";
 import { DatePicker } from "@/components/ui/date-picker";
 import { clientFetch } from "@/lib/api/client-fetch";
