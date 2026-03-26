@@ -4,6 +4,7 @@ import { Pet } from "@/domain/pet/pet.model";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { TrashIcon } from "@heroicons/react/24/outline";
+import { ConfirmDialog } from "@/components/confirm-dialog/confirm-dialog";
 
 interface PetListItemProps {
   pet: Pet,
@@ -25,7 +26,15 @@ export function PetsListItem({ pet, canModify, handleUnassignPet }: PetListItemP
           <span className="text-[12px]">Type: {pet.type.label}</span>
         </div>
       </div>
-      {canModify && handleUnassignPet && <Button variant="outline" size="icon" onClick={() => handleUnassignPet(pet.id)}><TrashIcon/></Button>}
+      {canModify && handleUnassignPet &&
+        <ConfirmDialog
+          trigger={<Button variant="outline" size="icon"><TrashIcon/></Button>}
+          title={'Remove pet'}
+          description={'Are you sure you want to remove this pet?'}
+          handleCancel={() => {}}
+          handleConfirm={() => handleUnassignPet(pet.id)}
+        />
+      }
     </div>
   )
 }
