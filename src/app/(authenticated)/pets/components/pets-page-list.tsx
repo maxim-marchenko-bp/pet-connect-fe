@@ -9,13 +9,13 @@ import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
 import { PetsList } from "@/app/(authenticated)/pets/components/pets-list";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { QueryOptions } from "@/domain/query-options/query-options.model";
-import { useUnassignPet } from "@/hooks/use-unassign-pet";
 
 interface PetsPageListProps extends QueryOptions {
   canModify?: boolean;
+  handleUnassignPet?: (id: number) => void;
 }
 
-export function PetsPageList({ path, queryKey, searchParams, canModify }: PetsPageListProps) {
+export function PetsPageList({ path, queryKey, searchParams, canModify, handleUnassignPet }: PetsPageListProps) {
   const {
     data,
     isLoading,
@@ -27,8 +27,6 @@ export function PetsPageList({ path, queryKey, searchParams, canModify }: PetsPa
     queryKey,
     searchParams,
   });
-  const { handleUnassignPet } = useUnassignPet(queryKey);
-  const handleUnassignPetAction = (id: number) => handleUnassignPet([id]);
 
   if (isLoading) {
     return (
@@ -54,7 +52,7 @@ export function PetsPageList({ path, queryKey, searchParams, canModify }: PetsPa
 
       <PageContent>
         <ListFilterForm formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
-        <PetsList pets={data} canModify={canModify} handleUnassignPetAction={handleUnassignPetAction} />
+        <PetsList pets={data} canModify={canModify} handleUnassignPet={handleUnassignPet} />
       </PageContent>
 
       <PageFooter>

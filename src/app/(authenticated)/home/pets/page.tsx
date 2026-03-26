@@ -3,6 +3,7 @@
 import { useMemo } from "react";
 import { PetsPageList } from "@/app/(authenticated)/pets/components/pets-page-list";
 import { useUser } from "@/hooks/use-user";
+import { useUnassignPet } from "@/hooks/use-unassign-pet";
 
 export default function HomePetsPage() {
   const { user } = useUser();
@@ -13,7 +14,10 @@ export default function HomePetsPage() {
     }
   ), [user.id]);
 
+  const { handleUnassignPet } = useUnassignPet(queryOptions.queryKey);
+  const handleUnassignPetAction = (id: number) => handleUnassignPet([id]);
+
   return (
-    <PetsPageList {...queryOptions} canModify={true} />
+    <PetsPageList {...queryOptions} canModify={true} handleUnassignPet={handleUnassignPetAction} />
   )
 }
