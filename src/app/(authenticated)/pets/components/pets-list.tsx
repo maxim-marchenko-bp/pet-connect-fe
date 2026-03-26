@@ -5,7 +5,7 @@ import { Pet } from "@/domain/pet/pet.model";
 import { Separator } from "@/components/ui/separator";
 import { PetsListItem } from "@/app/(authenticated)/pets/components/pets-list-item";
 
-export function PetsList({ pets }: { pets: Pet[] }) {
+export function PetsList({ pets, canModify, handleUnassignPetAction }: { pets: Pet[], canModify?: boolean, handleUnassignPetAction?: (id: number) => void }) {
   if (!pets || pets.length === 0) {
     return <EmptyState title="No pets found" />;
   }
@@ -13,7 +13,7 @@ export function PetsList({ pets }: { pets: Pet[] }) {
   return (
     pets.map((pet, idx) => (
       <div key={pet.id}>
-        <PetsListItem pet={pet} />
+        <PetsListItem pet={pet} canModify={canModify} handleUnassignPetAction={handleUnassignPetAction} />
         {idx !== pets.length - 1 && <Separator />}
       </div>
     ))
