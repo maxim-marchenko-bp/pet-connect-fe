@@ -18,15 +18,5 @@ export const petFormConfig: FormFieldConfig[] = [
     placeholder: 'Select a type',
     type: 'select',
     rules: { required: 'Type is required' },
-    selectOptions: [
-      {
-        label: 'Cat',
-        value: '1',
-      },
-      {
-        label: 'Dog',
-        value: '2',
-      }
-    ]
   },
 ];
