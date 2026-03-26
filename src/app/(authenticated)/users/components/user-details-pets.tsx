@@ -7,16 +7,13 @@ import { UserInfoPetsList } from "@/app/(authenticated)/users/components/user-in
 import { UseQueryResult } from "@tanstack/react-query";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { Pet } from "@/domain/pet/pet.model";
-import { Button } from "@/components/ui/button";
 
 interface UserDetailsPetsProps {
   petsQuery: Partial<UseQueryResult<FilteredItems<Pet>>>;
-  canAddPets?: boolean;
-  handleAddPet?: () => void;
   canModify?: boolean;
 }
 
-export function UserDetailsPets({ petsQuery, canAddPets, handleAddPet, canModify }: UserDetailsPetsProps) {
+export function UserDetailsPets({ petsQuery, canModify }: UserDetailsPetsProps) {
   const { data: pets, isLoading, isError, error } = petsQuery;
 
   return (
@@ -25,7 +22,6 @@ export function UserDetailsPets({ petsQuery, canAddPets, handleAddPet, canModify
         <CardTitle className="mb-4">
           <div className="flex justify-between items-center min-h-8">
             <span>Pets</span>
-            {canAddPets && <Button size="sm" className="ml-4" onClick={handleAddPet}>Add Pet</Button>}
           </div>
         </CardTitle>
         {isLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}

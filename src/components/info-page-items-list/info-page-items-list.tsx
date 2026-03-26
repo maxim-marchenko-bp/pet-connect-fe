@@ -35,7 +35,7 @@ export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, see
             href={{pathname: seeMoreHref}}
             className="p-0 text-[16px] font-semibold text-primary"
           >
-            See more
+            {canModify ? 'Manage Pets' : 'See more'}
           </Link>
         </div>
       }
