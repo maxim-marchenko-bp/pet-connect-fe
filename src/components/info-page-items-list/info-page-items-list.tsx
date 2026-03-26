@@ -9,9 +9,10 @@ interface InfoPageItemsListProps<T> {
   totalCount?: number;
   itemComponent: React.ComponentType<{ item: T }>;
   seeMoreHref: string;
+  canModify?: boolean;
 }
 
-export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, seeMoreHref }: InfoPageItemsListProps<T>) {
+export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, seeMoreHref, canModify }: InfoPageItemsListProps<T>) {
   if (!items?.length) {
     return <EmptyState title={'No pets were found'} />;
   }
@@ -28,7 +29,7 @@ export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, see
         }
       </div>
       {
-        (totalCount > items.length) &&
+        ((totalCount > items.length) || canModify) &&
         <div className="flex justify-end mt-6">
           <Link
             href={{pathname: seeMoreHref}}

@@ -21,9 +21,10 @@ interface UserPageProps {
   userQuery: Partial<UseQueryResult<User>>;
   petsQuery: Partial<UseQueryResult<FilteredItems<Pet>>>;
   canAddPets?: boolean;
+  canModify?: boolean;
 }
 
-export function UserPage({ userQuery, petsQuery, canAddPets }: UserPageProps ) {
+export function UserPage({ userQuery, petsQuery, canAddPets, canModify }: UserPageProps ) {
   const formattedDate = useFormattedDate();
   const router = useRouter();
 
@@ -71,7 +72,7 @@ export function UserPage({ userQuery, petsQuery, canAddPets }: UserPageProps ) {
         </div>
 
         <div>
-          <UserDetailsPets petsQuery={petsQuery} canAddPets={canAddPets} handleAddPet={handleAddPet} />
+          <UserDetailsPets petsQuery={petsQuery} canAddPets={canAddPets} handleAddPet={handleAddPet} canModify={canModify} />
         </div>
       </PageContent>
     </Page>

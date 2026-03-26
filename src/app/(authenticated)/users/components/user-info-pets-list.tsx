@@ -9,9 +9,10 @@ import { InfoPageItemsList } from "@/components/info-page-items-list/info-page-i
 interface PetListProps {
   pets?: Pet[];
   totalCount?: number;
+  canModify?: boolean;
 }
 
-export function UserInfoPetsList({ pets, totalCount = 0 }: PetListProps) {
+export function UserInfoPetsList({ pets, totalCount = 0, canModify }: PetListProps) {
   const pathname = usePathname();
   if (!pets?.length) {
     return <EmptyState title={'No pets were found'}/>
@@ -22,6 +23,7 @@ export function UserInfoPetsList({ pets, totalCount = 0 }: PetListProps) {
       items={pets}
       seeMoreHref={`${pathname}/pets`}
       totalCount={totalCount}
+      canModify={canModify}
       itemComponent={({item}) => <UserInfoPetCard pet={item} /> }
     />
   )

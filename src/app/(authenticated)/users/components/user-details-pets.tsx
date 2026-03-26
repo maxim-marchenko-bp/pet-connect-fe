@@ -13,9 +13,10 @@ interface UserDetailsPetsProps {
   petsQuery: Partial<UseQueryResult<FilteredItems<Pet>>>;
   canAddPets?: boolean;
   handleAddPet?: () => void;
+  canModify?: boolean;
 }
 
-export function UserDetailsPets({ petsQuery, canAddPets, handleAddPet }: UserDetailsPetsProps) {
+export function UserDetailsPets({ petsQuery, canAddPets, handleAddPet, canModify }: UserDetailsPetsProps) {
   const { data: pets, isLoading, isError, error } = petsQuery;
 
   return (
@@ -29,7 +30,7 @@ export function UserDetailsPets({ petsQuery, canAddPets, handleAddPet }: UserDet
         </CardTitle>
         {isLoading && <div className="flex justify-center"><Spinner className="size-8 text-primary"/></div>}
         {isError && error && <EmptyState title={'Error loading pets'} description={error.message} />}
-        {!isLoading && !isError && <UserInfoPetsList pets={pets?.items} totalCount={pets?.totalCount}></UserInfoPetsList>}
+        {!isLoading && !isError && <UserInfoPetsList pets={pets?.items} totalCount={pets?.totalCount} canModify={canModify}></UserInfoPetsList>}
       </CardContent>
     </Card>
   )
