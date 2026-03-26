@@ -12,8 +12,8 @@
 
 - [x] Add pet to profile (persist to backend)
 - [ ] Remove pet from profile
-- [ ] Edit pet information
-- [ ] View pet information (profile & detail view)
+- [x] Edit pet information
+- [x] View pet information (profile & detail view)
 
 ---
 
