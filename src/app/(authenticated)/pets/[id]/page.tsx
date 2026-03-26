@@ -4,7 +4,7 @@ import { LabelValue } from "@/components/label-value/label-value";
 import { Card, CardContent } from "@/components/ui/card";
 import { Page, PageContent } from "@/components/ui/page";
 import Image from "next/image";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { Pet } from "@/domain/pet/pet.model";
@@ -13,9 +13,12 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { User } from "@/domain/user/user.model";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { PetDetailsUsers } from "@/app/(authenticated)/pets/components/pet-details-users";
+import { Button } from "@/components/ui/button";
+import { PencilSquareIcon } from "@heroicons/react/24/outline";
 
 export default function PetPage() {
   const { id } = useParams();
+  const router = useRouter();
   const petId = id as string;
 
   const { data: pet, isLoading: isPetLoading, isError: isPetError, error: petError } = useQuery({
@@ -47,6 +50,12 @@ export default function PetPage() {
           <Card className="w-fit">
             <CardContent>
               <Image src={`/images/male-profile-placeholder.png`} alt="pet image" width={150} height={300} />
+              <Button className="w-full mt-4" onClick={() => router.push(`/pets/${petId}/edit`)}>
+                <div className="flex justify-between items-center gap-2">
+                  <PencilSquareIcon />
+                  <span>Edit info</span>
+                </div>
+              </Button>
             </CardContent>
           </Card>
 

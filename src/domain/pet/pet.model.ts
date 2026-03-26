@@ -5,6 +5,11 @@ import { User } from "@/domain/user/user.model";
 export interface Pet extends BaseModel {
   name: string;
   dateOfBirth?: Date | null;
-  type?: PetType;
+  type: PetType;
   users: User[];
+  canEdit?: boolean;
+}
+
+export interface CreatePetDto extends Omit<Pet, 'type'> {
+  type: string;
 }

@@ -1,33 +1,36 @@
 'use client';
 
-import { useForm } from "react-hook-form";
-import { Pet } from "@/domain/pet/pet.model";
-import { clientFetch } from "@/lib/api/client-fetch";
-import { useFormMutation } from "@/hooks/use-form-mutation";
-import { useRouter } from "next/navigation";
 import { Page, PageContent, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
+import { useForm } from "react-hook-form";
+import { CreatePetDto, Pet } from "@/domain/pet/pet.model";
+import { useQuery } from "@tanstack/react-query";
+import { clientFetch } from "@/lib/api/client-fetch";
+import { petFormConfig } from "@/app/(authenticated)/pets/constants/pet-form";
+import { FormFieldConfig } from "@/domain/form/form.type";
+import { useFormMutation } from "@/hooks/use-form-mutation";
 import { Card } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
-import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
-import { petFormConfig } from "@/app/(authenticated)/pets/constants/pet-form";
-import { Button } from "@/components/ui/button";
 import { FieldGroup } from "@/components/ui/field";
-import { FormFieldConfig } from "@/domain/form/form.type";
-import { useUser } from "@/hooks/use-user";
+import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
+import { Button } from "@/components/ui/button";
+import { useParams } from "next/navigation";
+import { useEffect } from "react";
 import { usePetTypes } from "@/hooks/use-pet-types";
 
-export default function NewPetPage() {
-  const { user } = useUser();
-  const router = useRouter();
-  const form = useForm<Pet>({
+export default function EditPetPage() {
+  const { id: petId } = useParams();
+  const { data: pet } = useQuery({
+    queryKey: ['pet'],
+    queryFn: () => clientFetch<Pet>(`/pets/${petId}`),
+  });
+  const form = useForm<CreatePetDto>({
     defaultValues: {
       name: '',
       dateOfBirth: null,
       type: undefined,
-      users: [user],
     },
   });
-  const { handleSubmit } = form;
+  const { handleSubmit, reset } = form;
   const { data: petTypes, isLoading } = usePetTypes();
 
   const petFormFields = petFormConfig.map(field => {
@@ -42,26 +45,37 @@ export default function NewPetPage() {
     }
   });
 
-  const createPet = async (formValue: Pet) => {
+  const updatePet = async (formValue: CreatePetDto) => {
     const body = JSON.stringify(formValue);
-    return await clientFetch('/pets', { body, method: 'POST', headers: { 'Content-Type': 'application/json' } });
+    return await clientFetch(`/pets/${petId}`, { body, method: 'PUT', headers: { 'Content-Type': 'application/json' } });
   };
 
   const { handleSubmit: handleFormSubmit } = useFormMutation({
-    mutationFn: createPet,
-    onSuccess: () => router.push('/home'),
+    mutationFn: updatePet,
     messages: {
-      loading: 'Creating pet...',
-      success: 'Pet created successfully!',
+      loading: 'Updating pet...',
+      success: 'Pet updated successfully!',
       error: (err) => err.message,
     }
   });
 
+  useEffect(() => {
+    if (pet) {
+      setTimeout(() => {
+        reset({
+          name: pet.name,
+          dateOfBirth: pet.dateOfBirth ? new Date(pet.dateOfBirth) : null,
+          type: pet.type.code,
+        });
+      })
+    }
+  }, [pet, reset]);
+
   return (
     <Page>
       <PageHeader>
-        <PageHeaderTitle>Create new pet</PageHeaderTitle>
-        <PageHeaderSubtitle>Fill information about your pet</PageHeaderSubtitle>
+        <PageHeaderTitle>Edit pet</PageHeaderTitle>
+        <PageHeaderSubtitle>Edit information about your pet</PageHeaderSubtitle>
       </PageHeader>
 
       <PageContent>
@@ -72,7 +86,7 @@ export default function NewPetPage() {
                 <FormFieldRenderer formConfig={petFormFields} />
               </FieldGroup>
               <div className="mt-4 flex justify-end">
-                <Button type="submit">Create pet</Button>
+                <Button type="submit">Update pet</Button>
               </div>
             </form>
           </Form>
