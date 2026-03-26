@@ -13,12 +13,13 @@ import { Form } from "@/components/ui/form";
 import { FieldGroup } from "@/components/ui/field";
 import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
 import { Button } from "@/components/ui/button";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { usePetTypes } from "@/hooks/use-pet-types";
 
 export default function EditPetPage() {
   const { id: petId } = useParams();
+  const router = useRouter();
   const { data: pet } = useQuery({
     queryKey: ['pet'],
     queryFn: () => clientFetch<Pet>(`/pets/${petId}`),
@@ -30,7 +31,7 @@ export default function EditPetPage() {
       type: undefined,
     },
   });
-  const { handleSubmit, reset } = form;
+  const { handleSubmit, reset, formState: { isDirty } } = form;
   const { data: petTypes, isLoading } = usePetTypes();
 
   const petFormFields = petFormConfig.map(field => {
@@ -50,11 +51,14 @@ export default function EditPetPage() {
     return await clientFetch(`/pets/${petId}`, { body, method: 'PUT', headers: { 'Content-Type': 'application/json' } });
   };
 
-  const { handleSubmit: handleFormSubmit } = useFormMutation({
+  const { handleSubmit: handleFormSubmit, isPending } = useFormMutation({
     mutationFn: updatePet,
     messages: {
       loading: 'Updating pet...',
-      success: 'Pet updated successfully!',
+      success: () => {
+        router.back();
+        return 'Pet updated successfully!';
+      },
       error: (err) => err.message,
     }
   });
@@ -62,11 +66,16 @@ export default function EditPetPage() {
   useEffect(() => {
     if (pet) {
       setTimeout(() => {
-        reset({
-          name: pet.name,
-          dateOfBirth: pet.dateOfBirth ? new Date(pet.dateOfBirth) : null,
-          type: pet.type.code,
-        });
+        reset(
+          {
+            name: pet.name,
+            dateOfBirth: pet.dateOfBirth ? new Date(pet.dateOfBirth) : null,
+            type: pet.type.code,
+          },
+          {
+            keepDirty: false
+          },
+        );
       })
     }
   }, [pet, reset]);
@@ -86,7 +95,7 @@ export default function EditPetPage() {
                 <FormFieldRenderer formConfig={petFormFields} />
               </FieldGroup>
               <div className="mt-4 flex justify-end">
-                <Button type="submit">Update pet</Button>
+                <Button disabled={!isDirty || isPending} type="submit">Update pet</Button>
               </div>
             </form>
           </Form>
