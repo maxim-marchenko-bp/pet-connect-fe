@@ -9,13 +9,17 @@ import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
 import { PetsList } from "@/app/(authenticated)/pets/components/pets-list";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { QueryOptions } from "@/domain/query-options/query-options.model";
+import { Button } from "@/components/ui/button";
+import { PlusIcon } from "@heroicons/react/24/outline";
 
 interface PetsPageListProps extends QueryOptions {
   canModify?: boolean;
+  canAdd?: boolean;
   handleUnassignPet?: (id: number) => void;
+  handleAddPet?: () => void;
 }
 
-export function PetsPageList({ path, queryKey, searchParams, canModify, handleUnassignPet }: PetsPageListProps) {
+export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, handleUnassignPet, handleAddPet }: PetsPageListProps) {
   const {
     data,
     isLoading,
@@ -46,8 +50,19 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, handleUn
   return (
     <Page>
       <PageHeader>
-        <PageHeaderTitle>Pets</PageHeaderTitle>
-        <PageHeaderSubtitle>Find pets you interested in</PageHeaderSubtitle>
+        <div className="w-full flex justify-between items-center">
+          <div>
+            <PageHeaderTitle>Pets</PageHeaderTitle>
+            <PageHeaderSubtitle>Find pets you interested in</PageHeaderSubtitle>
+          </div>
+          {
+            canAdd && handleAddPet &&
+            <Button onClick={handleAddPet}>
+              <PlusIcon />
+              <span>Add Pet</span>
+            </Button>
+          }
+        </div>
       </PageHeader>
 
       <PageContent>

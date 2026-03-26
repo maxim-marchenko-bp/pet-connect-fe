@@ -1,11 +1,10 @@
 'use client';
 
 import React from "react";
-import { EmptyState } from "../ui/empty-state";
 import Link from "next/link";
 
 interface InfoPageItemsListProps<T> {
-  items?: T[];
+  items: T[];
   totalCount?: number;
   itemComponent: React.ComponentType<{ item: T }>;
   seeMoreHref: string;
@@ -13,11 +12,17 @@ interface InfoPageItemsListProps<T> {
 }
 
 export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, seeMoreHref, canModify }: InfoPageItemsListProps<T>) {
-  if (!items?.length) {
-    return <EmptyState title={'No pets were found'} />;
-  }
-
   const ItemComponent = itemComponent;
+  const actionButton = (label: string) => (
+    <div className="flex justify-end mt-6">
+      <Link
+        href={{pathname: seeMoreHref}}
+        className="p-0 text-[16px] font-semibold text-primary"
+      >
+        {label}
+      </Link>
+    </div>
+  );
 
   return (
     <div>
@@ -29,15 +34,11 @@ export function InfoPageItemsList<T>({ items, totalCount = 0, itemComponent, see
         }
       </div>
       {
-        ((totalCount > items.length) || canModify) &&
-        <div className="flex justify-end mt-6">
-          <Link
-            href={{pathname: seeMoreHref}}
-            className="p-0 text-[16px] font-semibold text-primary"
-          >
-            {canModify ? 'Manage Pets' : 'See more'}
-          </Link>
-        </div>
+        canModify
+          ? actionButton('Manage Pets')
+          : items.length < totalCount
+            ? actionButton('See more')
+          : null
       }
     </div>
   );
