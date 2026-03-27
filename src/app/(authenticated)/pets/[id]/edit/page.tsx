@@ -65,18 +65,16 @@ export default function EditPetPage() {
 
   useEffect(() => {
     if (pet) {
-      setTimeout(() => {
-        reset(
-          {
-            name: pet.name,
-            dateOfBirth: pet.dateOfBirth ? new Date(pet.dateOfBirth) : null,
-            type: pet.type.code,
-          },
-          {
-            keepDirty: false
-          },
-        );
-      })
+      reset(
+        {
+          name: pet.name,
+          dateOfBirth: pet.dateOfBirth ? new Date(pet.dateOfBirth) : null,
+          type: pet.type.code,
+        },
+        {
+          keepDirty: false
+        },
+      );
     }
   }, [pet, reset]);
 
