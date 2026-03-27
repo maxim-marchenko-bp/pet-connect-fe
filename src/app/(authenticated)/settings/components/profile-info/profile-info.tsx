@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,11 +20,11 @@ export function ProfileInfo() {
   const { user, setUser } = useUser();
   const profileInfoForm = useForm<User>({
     defaultValues: {
-      name: '',
-      lastname: '',
-      email: '',
-      dateOfBirth: null,
-      gender: undefined,
+      name: user.name,
+      lastname: user.lastname,
+      email: user.email,
+      dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
+      gender: user.gender,
     },
   });
   const { handleSubmit, formState: { isDirty }, reset } = profileInfoForm;
@@ -78,24 +77,6 @@ export function ProfileInfo() {
       error: (err) => err.message,
     },
   });
-
-  useEffect(() => {
-    if (user) {
-      // TODO revisit this to refactor
-      setTimeout(() => {
-        reset({
-            name: user.name,
-            lastname: user.lastname,
-            email: user.email,
-            dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : null,
-            gender: user.gender,
-          },
-          {
-            keepDirty: false
-          });
-      })
-    }
-  }, [user, reset]);
 
   return (
     <Card className="w-full">

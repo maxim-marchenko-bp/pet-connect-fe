@@ -9,6 +9,6 @@ export interface User extends BaseModel{
   password: string;
   dateOfBirth?: Date | null;
   isActive?: boolean;
-  gender: Gender;
+  gender: Gender | null;
   pets?: Pet[];
 }
