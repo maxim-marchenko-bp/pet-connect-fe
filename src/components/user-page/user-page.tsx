@@ -14,6 +14,7 @@ import { Pet } from "@/domain/pet/pet.model";
 import { FilteredItems } from "@/lib/api/filtered-items";
 import { UseQueryResult } from "@tanstack/react-query";
 import { UserDetailsPets } from "@/app/(authenticated)/users/components/user-details-pets";
+import { ProfileCard } from "@/components/ui/profile-card";
 
 interface UserPageProps {
   userQuery: Partial<UseQueryResult<User>>;
@@ -49,11 +50,9 @@ export function UserPage({ userQuery, petsQuery, canModify }: UserPageProps ) {
     <Page>
       <PageContent className="flex flex-col gap-4">
         <div className="flex gap-4">
-          <Card className="w-fit">
-            <CardContent>
-              <Image src={`/images/${profileImage}.png`} alt="profile image" width={150} height={300} />
-            </CardContent>
-          </Card>
+          <ProfileCard>
+            <Image src={`/images/${profileImage}.png`} alt="profile image" width={150} height={300} />
+          </ProfileCard>
 
           <Card className="w-full">
             <CardContent className="text-[14px] flex flex-col gap-2">

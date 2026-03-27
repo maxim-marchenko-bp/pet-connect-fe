@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { getBaseUrl } from "@/lib/api/base-url";
 import { CopyButton } from "@/components/ui/copy-button";
+import { ProfileCard } from "@/components/ui/profile-card";
 
 export default function PetPage() {
   const { id } = useParams();
@@ -54,29 +55,25 @@ export default function PetPage() {
     <Page>
       <PageContent className="flex flex-col gap-4">
         <div className="flex gap-4">
-          <Card className="w-2/8">
-            <CardContent>
-              <div className="flex justify-center">
-                <Image src={`/images/male-profile-placeholder.png`} alt="pet image" width={150} height={300} />
-              </div>
-              {
-                pet.canEdit &&
-                  <div>
-                    <Button
-                      className="w-full mt-4"
-                      onClick={() => router.push(`/pets/${petId}/edit`)}
-                    >
-                      <div className="flex justify-between items-center gap-2">
-                        <PencilSquareIcon />
-                        <span>Edit info</span>
-                      </div>
-                    </Button>
+          <ProfileCard>
+            <Image src={`/images/male-profile-placeholder.png`} alt="pet image" width={150} height={300} />
+            {
+              pet.canEdit &&
+                <div>
+                  <Button
+                    className="w-full mt-4"
+                    onClick={() => router.push(`/pets/${petId}/edit`)}
+                  >
+                    <div className="flex justify-between items-center gap-2">
+                      <PencilSquareIcon />
+                      <span>Edit info</span>
+                    </div>
+                  </Button>
 
-                    <CopyButton textToCopy={getCopyText()} className="w-full mt-4" />
-                  </div>
-              }
-            </CardContent>
-          </Card>
+                  <CopyButton textToCopy={getCopyText()} className="w-full mt-4" />
+                </div>
+            }
+          </ProfileCard>
 
           <Card className="w-full">
             <CardContent className="text-[14px] flex flex-col gap-2">
