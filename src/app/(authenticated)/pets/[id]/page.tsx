@@ -15,6 +15,8 @@ import { FilteredItems } from "@/lib/api/filtered-items";
 import { PetDetailsUsers } from "@/app/(authenticated)/pets/components/pet-details-users";
 import { Button } from "@/components/ui/button";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
+import { getBaseUrl } from "@/lib/api/base-url";
+import { CopyButton } from "@/components/ui/copy-button";
 
 export default function PetPage() {
   const { id } = useParams();
@@ -25,6 +27,11 @@ export default function PetPage() {
     queryKey: ['pet', petId],
     queryFn: () => clientFetch<Pet>(`/pets/${petId}`),
   });
+
+  const getCopyText = () => {
+    const baseUrl = getBaseUrl();
+    return `${baseUrl}/users/join-pet?code=${petId}`;
+  };
 
   const usersQuery = useQuery({
     queryKey: ['petUsers', petId],
@@ -47,15 +54,27 @@ export default function PetPage() {
     <Page>
       <PageContent className="flex flex-col gap-4">
         <div className="flex gap-4">
-          <Card className="w-fit">
+          <Card className="w-2/8">
             <CardContent>
-              <Image src={`/images/male-profile-placeholder.png`} alt="pet image" width={150} height={300} />
-              <Button className="w-full mt-4" onClick={() => router.push(`/pets/${petId}/edit`)}>
-                <div className="flex justify-between items-center gap-2">
-                  <PencilSquareIcon />
-                  <span>Edit info</span>
-                </div>
-              </Button>
+              <div className="flex justify-center">
+                <Image src={`/images/male-profile-placeholder.png`} alt="pet image" width={150} height={300} />
+              </div>
+              {
+                pet.canEdit &&
+                  <div>
+                    <Button
+                      className="w-full mt-4"
+                      onClick={() => router.push(`/pets/${petId}/edit`)}
+                    >
+                      <div className="flex justify-between items-center gap-2">
+                        <PencilSquareIcon />
+                        <span>Edit info</span>
+                      </div>
+                    </Button>
+
+                    <CopyButton textToCopy={getCopyText()} className="w-full mt-4" />
+                  </div>
+              }
             </CardContent>
           </Card>
 

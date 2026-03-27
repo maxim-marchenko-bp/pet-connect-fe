@@ -1,4 +1,6 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+import { getBaseUrl } from "@/lib/api/base-url";
+
+const API_BASE_URL = getBaseUrl();
 
 export async function clientFetch<T>(info: RequestInfo, init?: RequestInit, canRetry = true): Promise<T> {
   const opts: RequestInit = {
