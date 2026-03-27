@@ -11,5 +11,5 @@ export interface Pet extends BaseModel {
 }
 
 export interface CreatePetDto extends Omit<Pet, 'type'> {
-  type: string;
+  type: string | null;
 }

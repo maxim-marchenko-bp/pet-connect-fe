@@ -28,7 +28,7 @@ export default function EditPetPage() {
     defaultValues: {
       name: '',
       dateOfBirth: null,
-      type: undefined,
+      type: null,
     },
   });
   const { handleSubmit, reset, formState: { isDirty } } = form;

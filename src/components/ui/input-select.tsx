@@ -24,9 +24,13 @@ export function InputSelect<T extends FieldValues>({ name, selectOptions, rules,
           <FormItem>
             <Select
               {...field}
-              onValueChange={field.onChange}
-              defaultValue={field.value}
-              value={field.value}
+              onValueChange={(value) => {
+                // Only call onChange if value is not empty/undefined
+                if (value) {
+                  field.onChange(value);
+                }
+              }}
+              value={field.value || ''}
             >
               <SelectTrigger className="w-full" aria-invalid={fieldState.invalid}>
                 <SelectValue placeholder={placeholder} />
