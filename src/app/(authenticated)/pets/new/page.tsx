@@ -49,7 +49,7 @@ export default function NewPetPage() {
 
   const { handleSubmit: handleFormSubmit } = useFormMutation({
     mutationFn: createPet,
-    onSuccess: () => router.back(),
+    onSuccess: () => router.push('/home/pets'),
     messages: {
       loading: 'Creating pet...',
       success: 'Pet created successfully!',

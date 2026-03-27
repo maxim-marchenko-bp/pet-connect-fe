@@ -56,7 +56,7 @@ export default function EditPetPage() {
     messages: {
       loading: 'Updating pet...',
       success: () => {
-        router.back();
+        router.push(`/pets/${petId}`);
         return 'Pet updated successfully!';
       },
       error: (err) => err.message,
@@ -94,7 +94,8 @@ export default function EditPetPage() {
               <FieldGroup>
                 <FormFieldRenderer formConfig={petFormFields} />
               </FieldGroup>
-              <div className="mt-4 flex justify-end">
+              <div className="mt-4 flex justify-end gap-4">
+                <Button variant="secondary" type="button" onClick={() => router.push(`/pets/${petId}`)} disabled={isPending}>Cancel</Button>
                 <Button disabled={!isDirty || isPending} type="submit">Update pet</Button>
               </div>
             </form>
