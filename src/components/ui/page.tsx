@@ -3,7 +3,7 @@ import { cn } from "@/lib/class-name/class-name";
 
 function Page({className, ...props}: ComponentProps<'div'>) {
   return (
-    <div className={cn('p-4 h-full', className)} {...props} />
+    <div className={cn('p-4 h-full w-full', className)} {...props} />
   )
 }
 

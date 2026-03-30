@@ -11,6 +11,11 @@ import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { QueryOptions } from "@/domain/query-options/query-options.model";
 import { SidebarFilter } from "@/components/sidebar-filter";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { userFilterFormConfig } from "@/app/(authenticated)/users/components/constants/users-filter-form-config";
+import { useQuery } from "@tanstack/react-query";
+import { clientFetch } from "@/lib/api/client-fetch";
+import { Gender } from "@/domain/gender/gender.enum";
+import { titleCase } from "@/lib/text-transform/titlecase";
 
 export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
   const {
@@ -24,6 +29,21 @@ export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
     path,
     queryKey,
     searchParams,
+  });
+  const { data: genders, isLoading: isGendersLoading } = useQuery({
+    queryKey: ['genders'],
+    queryFn: () => clientFetch<Gender[]>('/genders')
+  });
+  const filterFormConfig = userFilterFormConfig.map(field => {
+    if (field.name === 'gender') {
+      return {
+        ...field,
+        selectOptions: genders?.map(g => ({ value: g, label: titleCase(g) })),
+        isLoading: isGendersLoading,
+      };
+    } else {
+      return field;
+    }
   });
 
   if (isLoading) {
@@ -42,30 +62,32 @@ export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
   }
 
   return (
-    <Page>
-      <PageHeader>
-        <PageHeaderTitle>People</PageHeaderTitle>
-        <PageHeaderSubtitle>Find people you might know or interested in</PageHeaderSubtitle>
-      </PageHeader>
+    <SidebarProvider defaultOpen={false}>
+      <Page>
+        <PageHeader>
+          <PageHeaderTitle>People</PageHeaderTitle>
+          <PageHeaderSubtitle>Find people you might know or interested in</PageHeaderSubtitle>
+        </PageHeader>
 
-      <PageContent>
-        <ListSearch formValue={{searchTerm: queryFilters.searchTerm as string}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
-        <SidebarProvider defaultOpen={false}>
-          <div className="w-full flex justify-end">
-            <SidebarTrigger size="default" className="w-fit" label="Filter" variant="default" showIcon={false} useSizing={false}></SidebarTrigger>
-          </div>
-          <SidebarFilter formValue={queryFilters} onFilterFormSubmit={setQueryParams} />
-        </SidebarProvider>
-        <UserList users={data} />
-      </PageContent>
+        <PageContent>
+          <ListSearch formValue={{searchTerm: queryFilters.searchTerm as string}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
 
-      <PageFooter>
-        <AppPagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={(page) => setQueryParams({page})}
-        />
-      </PageFooter>
-    </Page>
+            <div className="w-full flex justify-end">
+              <SidebarTrigger size="default" className="w-fit" label="Filter" variant="default" showIcon={false} useSizing={false}></SidebarTrigger>
+            </div>
+            <SidebarFilter formValue={queryFilters} onFilterFormSubmit={setQueryParams} formFieldsConfig={filterFormConfig} />
+
+          <UserList users={data} />
+        </PageContent>
+
+        <PageFooter>
+          <AppPagination
+            currentPage={page}
+            totalPages={totalPages}
+            onPageChange={(page) => setQueryParams({page})}
+          />
+        </PageFooter>
+      </Page>
+    </SidebarProvider>
   )
 }

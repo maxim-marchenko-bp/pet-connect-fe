@@ -1,15 +1,28 @@
 'use client';
 
 import { useForm } from "react-hook-form";
-import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarTrigger
+} from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
+import { Form } from "@/components/ui/form";
+import { FieldGroup } from "@/components/ui/field";
+import { FormFieldConfig } from "@/domain/form/form.type";
+import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 interface SidebarFilterProps {
+  formFieldsConfig: FormFieldConfig[];
   formValue: Record<string, string | number>;
   onFilterFormSubmit: (updates: Record<string, string | number>) => void;
 }
 
-export function SidebarFilter({ formValue, onFilterFormSubmit }: SidebarFilterProps ) {
+export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps ) {
   const filterForm = useForm({
     defaultValues: {...formValue},
   });
@@ -25,12 +38,25 @@ export function SidebarFilter({ formValue, onFilterFormSubmit }: SidebarFilterPr
 
   return (
     <Sidebar side="right" variant="floating" collapsible="offcanvas">
-      <SidebarHeader>Filters</SidebarHeader>
+      <SidebarHeader>
+        <div className="flex justify-between items-center">
+          <span className="text-xl">Filter</span>
+          <SidebarTrigger variant="ghost" icon={<XMarkIcon/>} />
+        </div>
+      </SidebarHeader>
       <SidebarContent>
-        <div>Form goes here</div>
+        <SidebarGroup>
+          <Form {...filterForm} >
+            <form id="sidebar-filter-form" onSubmit={onFormSubmit}>
+              <FieldGroup>
+                <FormFieldRenderer formConfig={formFieldsConfig} />
+              </FieldGroup>
+            </form>
+          </Form>
+        </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <Button onClick={() => onFormSubmit}>Apply</Button>
+        <Button type="submit" form="sidebar-filter-form">Apply</Button>
       </SidebarFooter>
     </Sidebar>
   )

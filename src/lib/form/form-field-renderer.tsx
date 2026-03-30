@@ -15,7 +15,7 @@ export function FormFieldRenderer({ formConfig }: PropsWithChildren<{ formConfig
   };
 
   return (
-    formConfig.map(item => {
+    formConfig?.map(item => {
       const InputComponent = inputByType[item.type];
       return <InputComponent key={item.name} {...item}/>
     })

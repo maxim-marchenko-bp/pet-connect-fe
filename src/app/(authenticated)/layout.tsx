@@ -8,7 +8,6 @@ import { useQuery } from "@tanstack/react-query";
 import { Spinner } from "@/components/ui/spinner";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar/app-sidebar";
-import { Header } from "@/components/header/header";
 
 // Force dynamic rendering for authenticated routes
 export const dynamic = 'force-dynamic';
@@ -51,7 +50,6 @@ export default function AuthenticatedLayout({
      <SidebarProvider>
        <AppSidebar />
        <div className="flex flex-col flex-1">
-         <Header />
 
          <main className="flex-1">
            {children}
