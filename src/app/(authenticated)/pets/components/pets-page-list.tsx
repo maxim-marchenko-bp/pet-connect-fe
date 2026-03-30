@@ -24,7 +24,8 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, 
     data,
     isLoading,
     error,
-    params: { searchTerm, totalCount, totalPages, page },
+    paginationParams: { totalCount, totalPages, page },
+    queryFilters,
     setQueryParams
   } = useParamsDataLoader<Pet>({
     path,
@@ -66,7 +67,7 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, 
       </PageHeader>
 
       <PageContent>
-        <ListSearch formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
+        <ListSearch formValue={{searchTerm: queryFilters.searchTerm as string}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
         <PetsList pets={data} canModify={canModify} handleUnassignPet={handleUnassignPet} />
       </PageContent>
 

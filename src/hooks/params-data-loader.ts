@@ -8,7 +8,7 @@
 
   export function useParamsDataLoader<T>({ path, queryKey, searchParams }: QueryOptions) {
     const [queryParams, setQueryParams] = useUrlSearchParams(searchParams);
-    const { page, pageSize, searchTerm } = queryParams;
+    const { pageSize, page, ...queryFilters } = queryParams;
     const { data, isLoading, isError, error } = useQuery({
       queryKey: [...queryKey, queryParams],
       queryFn: () => clientFetch<FilteredItems<T>>(`${path}?${buildSearchParams(queryParams)}`),
@@ -23,11 +23,11 @@
       isLoading,
       error: isError ? error : undefined,
       setQueryParams,
-      params: {
+      paginationParams: {
         totalCount,
         totalPages,
         page,
-        searchTerm,
-      }
+      },
+      queryFilters,
     }
   }

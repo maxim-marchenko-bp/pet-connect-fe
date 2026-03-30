@@ -5,22 +5,26 @@ import { updateSearchParams } from "@/lib/search-params/update-search-params";
 interface QueryParamsResult {
   page: number;
   pageSize: number;
-  searchTerm: string;
-  [key: string]: string | number | (string | number);
+  [key: string]: string | number;
 }
 
 export function useUrlSearchParams(params: Record<string, string | number | (string | number)[]> = {}): [QueryParamsResult, (params: Record<string, string | number>) => void] {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
-  const queryParams = useMemo(() => (
-    {
+  const queryParams = useMemo(() => {
+    const baseFilter = {
       page: Number(searchParams.get('page') || 1),
       pageSize: Number(searchParams.get('pageSize') || 10),
-      searchTerm: searchParams.get('searchTerm') || '',
       ...params,
-    }
-  ), [searchParams, params]);
+    } as QueryParamsResult;
+
+    searchParams.keys().filter(key => key !== 'page' && key !== 'pageSize').forEach(key => {
+      baseFilter[key] = searchParams.get(key) ?? '';
+    });
+
+    return baseFilter;
+  }, [searchParams, params]);
 
   const setUrlQueryParams = (params: Record<string, string | number> = {}) => {
     const updatedParams = updateSearchParams(params, searchParams);
