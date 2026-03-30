@@ -5,7 +5,7 @@ import { User } from "@/domain/user/user.model";
 import { Spinner } from "@/components/ui/spinner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Page, PageContent, PageFooter, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
-import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
+import { ListSearch } from "@/components/list-filter-form/list-search";
 import { UserList } from "@/app/(authenticated)/users/components/user-list";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { QueryOptions } from "@/domain/query-options/query-options.model";
@@ -46,7 +46,7 @@ export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
       </PageHeader>
 
       <PageContent>
-        <ListFilterForm formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
+        <ListSearch formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
         <UserList users={data} />
       </PageContent>
 

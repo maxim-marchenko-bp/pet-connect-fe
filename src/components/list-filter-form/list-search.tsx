@@ -5,7 +5,7 @@ import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/in
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
 
-interface FilterProps {
+interface ListSearchProps {
   formValue: {
     searchTerm: string;
   },
@@ -13,7 +13,7 @@ interface FilterProps {
   onFilterFormSubmit: (updates: Record<string, string | number>) => void;
 }
 
-export function ListFilterForm({formValue, totalCount, onFilterFormSubmit}: FilterProps) {
+export function ListSearch({ formValue, totalCount, onFilterFormSubmit }: ListSearchProps) {
   const filterForm = useForm<{searchTerm: string}>({
     defaultValues: {
       searchTerm: formValue.searchTerm || '',

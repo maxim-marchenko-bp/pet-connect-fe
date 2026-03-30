@@ -5,7 +5,7 @@ import { Pet } from "@/domain/pet/pet.model";
 import { Spinner } from "@/components/ui/spinner";
 import { EmptyState } from "@/components/ui/empty-state";
 import { Page, PageContent, PageFooter, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
-import { ListFilterForm } from "@/components/list-filter-form/list-filter-form";
+import { ListSearch } from "@/components/list-filter-form/list-search";
 import { PetsList } from "@/app/(authenticated)/pets/components/pets-list";
 import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { QueryOptions } from "@/domain/query-options/query-options.model";
@@ -66,7 +66,7 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, 
       </PageHeader>
 
       <PageContent>
-        <ListFilterForm formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
+        <ListSearch formValue={{searchTerm}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
         <PetsList pets={data} canModify={canModify} handleUnassignPet={handleUnassignPet} />
       </PageContent>
 
