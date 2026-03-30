@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { Form, FormField, FormItem } from "@/components/ui/form";
-import { FieldGroup } from "@/components/ui/field";
 import { InputGroup, InputGroupAddon, InputGroupInput } from "@/components/ui/input-group";
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/components/ui/button";
@@ -32,28 +31,23 @@ export function ListSearch({ formValue, totalCount, onFilterFormSubmit }: ListSe
   return (
     <div>
       <Form {...filterForm}>
-        <form id="filterForm" onSubmit={onFormSubmit} className="mb-4">
-          <FieldGroup>
+        <form id="filterForm" onSubmit={onFormSubmit} className="mb-4 flex gap-4">
             <FormField
               name="searchTerm"
               render={({field}) => (
-                <FormItem>
+                <FormItem className="w-fit">
                   <InputGroup className="max-w-xs">
                     <InputGroupInput placeholder="Search"{...field} />
                     <InputGroupAddon>
-                      <MagnifyingGlassIcon />
+                      <MagnifyingGlassIcon type="submit" />
                     </InputGroupAddon>
                     <InputGroupAddon align="inline-end">{formValue.searchTerm ? totalCount : ''}</InputGroupAddon>
                   </InputGroup>
                 </FormItem>
               )}
             />
-          </FieldGroup>
+          <Button form="filterForm" size="icon" type="submit"><MagnifyingGlassIcon /></Button>
         </form>
-
-        <div className="flex justify-end">
-          <Button form="filterForm" type="submit">Filter</Button>
-        </div>
       </Form>
     </div>
   )
