@@ -24,6 +24,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { JSX } from "react";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -256,8 +257,13 @@ function Sidebar({
 function SidebarTrigger({
   className,
   onClick,
+  icon,
+  size,
+  label,
+  useSizing = true,
+  showIcon = true,
   ...props
-}: React.ComponentProps<typeof Button>) {
+}: React.ComponentProps<typeof Button> & { icon?: JSX.Element, label?: string, showIcon?: boolean, useSizing?: boolean }) {
   const { toggleSidebar } = useSidebar()
 
   return (
@@ -265,15 +271,19 @@ function SidebarTrigger({
       data-sidebar="trigger"
       data-slot="sidebar-trigger"
       variant="ghost"
-      size="icon"
-      className={cn("size-7", className)}
+      size={size ?? 'icon'}
+      className={cn(useSizing ? "size-7" : undefined, className)}
       onClick={(event) => {
         onClick?.(event)
         toggleSidebar()
       }}
       {...props}
     >
-      <PanelLeftIcon />
+      {
+        showIcon &&
+          (icon ? icon : <PanelLeftIcon />)
+      }
+      {label}
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )
