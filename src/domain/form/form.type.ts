@@ -6,4 +6,5 @@ export interface FormFieldConfig extends Pick<ControllerProps, 'name' | 'rules'>
   placeholder?: string;
   selectOptions?: SelectOption[];
   isLoading?: boolean;
+  allowClear?: boolean;
 }

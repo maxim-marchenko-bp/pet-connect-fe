@@ -5,5 +5,6 @@ export const userFilterFormConfig: FormFieldConfig[] = [
     name: 'gender',
     type: 'select',
     placeholder: 'Select gender',
+    allowClear: true,
   },
 ];

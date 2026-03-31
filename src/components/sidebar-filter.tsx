@@ -7,7 +7,7 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
-  SidebarTrigger
+  SidebarTrigger, useSidebar
 } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -23,6 +23,7 @@ interface SidebarFilterProps {
 }
 
 export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps ) {
+  const { toggleSidebar} = useSidebar();
   const filterForm = useForm({
     defaultValues: {...formValue},
   });
@@ -34,6 +35,7 @@ export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig 
       ...formValue,
     };
     onFilterFormSubmit(filterParams);
+    toggleSidebar();
   });
 
   return (
