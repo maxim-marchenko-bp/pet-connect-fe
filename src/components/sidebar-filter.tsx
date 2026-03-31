@@ -15,6 +15,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { FormFieldConfig } from "@/domain/form/form.type";
 import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
 
 interface SidebarFilterProps {
   formFieldsConfig: FormFieldConfig[];
@@ -25,7 +26,7 @@ interface SidebarFilterProps {
 export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps ) {
   const { toggleSidebar} = useSidebar();
   const filterForm = useForm({
-    defaultValues: {...formValue},
+    values: formValue,
   });
   const { handleSubmit } = filterForm;
 
@@ -38,6 +39,10 @@ export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig 
     toggleSidebar();
   });
 
+  useEffect(() => {
+    filterForm.reset(formValue);
+  }, [formValue, filterForm]);
+
   return (
     <Sidebar side="right" variant="floating" collapsible="offcanvas">
       <SidebarHeader>
@@ -48,7 +53,7 @@ export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig 
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <Form {...filterForm} >
+          <Form key={JSON.stringify(formValue)} {...filterForm} >
             <form id="sidebar-filter-form" onSubmit={onFormSubmit}>
               <FieldGroup>
                 <FormFieldRenderer formConfig={formFieldsConfig} />
