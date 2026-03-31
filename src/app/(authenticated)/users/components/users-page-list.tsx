@@ -11,7 +11,7 @@ import { AppPagination } from "@/components/app-pagination/app-pagination";
 import { QueryOptions } from "@/domain/query-options/query-options.model";
 import { SidebarFilter } from "@/components/sidebar-filter";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { userFilterFormConfig } from "@/app/(authenticated)/users/components/constants/users-filter-form-config";
+import { userFilterFormConfig } from "@/app/(authenticated)/users/constants/users-filter-form-config";
 import { useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { Gender } from "@/domain/gender/gender.enum";
