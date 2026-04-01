@@ -11,13 +11,15 @@ import { PropsWithChildren, useState } from "react";
 import { FormField, FormItem, FormMessage } from "@/components/ui/form";
 import { cn } from "@/lib/class-name/class-name";
 import { RegisterOptions } from "react-hook-form";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 export interface DatePickerProps extends PropsWithChildren {
   name: string;
   rules?: RegisterOptions;
+  allowClear?: boolean;
 }
 
-export function DatePicker({ name, rules }: DatePickerProps) {
+export function DatePicker({ name, rules, allowClear }: DatePickerProps) {
   const [open, setOpen] = useState(false);
   const [userLocale] = useState(() => Intl.DateTimeFormat().resolvedOptions().locale ?? 'en-GB');
 
@@ -26,7 +28,7 @@ export function DatePicker({ name, rules }: DatePickerProps) {
       name={name}
       rules={rules}
       render={({field, fieldState}) => (
-        <FormItem>
+        <FormItem className="relative w-full max-w-xs">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
@@ -60,6 +62,17 @@ export function DatePicker({ name, rules }: DatePickerProps) {
               />
             </PopoverContent>
           </Popover>
+          {
+            field.value && allowClear &&
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {field.onChange(null)}}
+              className="absolute right-0 top-1/2 -translate-y-1/2 rounded-sm p-1 text-muted-foreground hover:bg-accent hover:text-accent-foreground"
+            >
+              <XMarkIcon />
+            </Button>
+          }
           <FormMessage/>
         </FormItem>
       )}

@@ -1,7 +1,7 @@
 import { ReadonlyURLSearchParams } from "next/navigation";
 
-export const updateSearchParams = (
-  updates: Record<string, string | number>,
+export const updateSearchParams = <T extends object>(
+  updates: T,
   searchParams: ReadonlyURLSearchParams,
 ) => {
   const params = new URLSearchParams(searchParams.toString());

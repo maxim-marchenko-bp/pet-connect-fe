@@ -8,7 +8,7 @@ interface QueryParamsResult {
   [key: string]: string | number;
 }
 
-export function useUrlSearchParams(params: Record<string, string | number | (string | number)[]> = {}): [QueryParamsResult, (params: Record<string, string | number>) => void] {
+export function useUrlSearchParams(params: Record<string, unknown> = {}): [QueryParamsResult, (params: Record<string, unknown>) => void] {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -26,7 +26,7 @@ export function useUrlSearchParams(params: Record<string, string | number | (str
     return baseFilter;
   }, [searchParams, params]);
 
-  const setUrlQueryParams = (params: Record<string, string | number> = {}) => {
+  const setUrlQueryParams = (params: Record<string, unknown> = {}) => {
     const updatedParams = updateSearchParams(params, searchParams);
     router.push(`${pathname}?${updatedParams.toString()}`)
   }

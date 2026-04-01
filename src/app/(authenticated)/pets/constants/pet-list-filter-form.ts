@@ -7,4 +7,10 @@ export const petListFilterForm: FormFieldConfig[] = [
     allowClear: true,
     placeholder: 'Select type',
   },
+  {
+    name: 'dateOfBirth',
+    type: 'date',
+    placeholder: 'Select date',
+    allowClear: true,
+  },
 ];

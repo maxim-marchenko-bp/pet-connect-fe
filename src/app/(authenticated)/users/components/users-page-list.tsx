@@ -16,6 +16,10 @@ import { useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { Gender } from "@/domain/gender/gender.enum";
 import { titleCase } from "@/lib/text-transform/titlecase";
+import { paramsToForm } from "@/lib/form/params-to-form";
+import { formatDateForApi } from "@/lib/date/format-date-for-api";
+
+type UserPageListFilterParams = Pick<User, 'dateOfBirth' | 'gender'> & { page: number }
 
 export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
   const {
@@ -34,6 +38,13 @@ export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
     queryKey: ['genders'],
     queryFn: () => clientFetch<Gender[]>('/genders')
   });
+  const onFilterFormSubmit = (updates: UserPageListFilterParams) => {
+    const params = {
+      ...updates,
+      dateOfBirth: updates.dateOfBirth ? formatDateForApi(updates.dateOfBirth) : '',
+    }
+    setQueryParams(params as Record<string, string | number>);
+  }
   const filterFormConfig = userFilterFormConfig.map(field => {
     if (field.name === 'gender') {
       return {
@@ -70,12 +81,12 @@ export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
         </PageHeader>
 
         <PageContent>
-          <ListSearch formValue={{searchTerm: queryFilters.searchTerm as string}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
+          <ListSearch formValue={{searchTerm: queryFilters.searchTerm as string}} totalCount={totalCount} onFilterFormSubmit={onFilterFormSubmit} />
 
             <div className="w-full flex justify-end">
               <SidebarTrigger size="default" className="w-fit" label="Filter" variant="default" showIcon={false} useSizing={false}></SidebarTrigger>
             </div>
-            <SidebarFilter formValue={queryFilters} onFilterFormSubmit={setQueryParams} formFieldsConfig={filterFormConfig} />
+            <SidebarFilter formValue={paramsToForm(queryFilters as Record<string, string>, filterFormConfig) as unknown as UserPageListFilterParams} onFilterFormSubmit={onFilterFormSubmit} formFieldsConfig={filterFormConfig} />
 
           <UserList users={data} />
         </PageContent>

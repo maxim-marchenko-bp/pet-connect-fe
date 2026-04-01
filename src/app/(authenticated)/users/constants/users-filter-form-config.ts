@@ -7,4 +7,10 @@ export const userFilterFormConfig: FormFieldConfig[] = [
     placeholder: 'Select gender',
     allowClear: true,
   },
+  {
+    name: 'dateOfBirth',
+    type: 'date',
+    placeholder: 'Select date',
+    allowClear: true,
+  },
 ];

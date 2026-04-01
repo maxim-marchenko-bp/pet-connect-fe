@@ -6,7 +6,15 @@
   import { useMemo } from "react";
   import { QueryOptions } from "@/domain/query-options/query-options.model";
 
-  export function useParamsDataLoader<T>({ path, queryKey, searchParams }: QueryOptions) {
+  export function useParamsDataLoader<T>({ path, queryKey, searchParams }: QueryOptions): {
+    data: T[];
+    isLoading: boolean;
+    error?: Error;
+    setQueryParams: (params: Record<string, unknown>) => void;
+    paginationParams: { totalCount?: number, totalPages: number, page: number };
+    queryFilters: Record<string, string | number>;
+  }
+  {
     const [queryParams, setQueryParams] = useUrlSearchParams(searchParams);
     const { pageSize, page, ...queryFilters } = queryParams;
     const { data, isLoading, isError, error } = useQuery({

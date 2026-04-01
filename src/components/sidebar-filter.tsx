@@ -1,6 +1,6 @@
 'use client';
 
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import {
   Sidebar,
   SidebarContent,
@@ -17,15 +17,15 @@ import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useEffect } from "react";
 
-interface SidebarFilterProps {
+interface SidebarFilterProps<T> {
   formFieldsConfig: FormFieldConfig[];
-  formValue: Record<string, string | number>;
-  onFilterFormSubmit: (updates: Record<string, string | number>) => void;
+  formValue: T;
+  onFilterFormSubmit: (updates: T) => void;
 }
 
-export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps ) {
+export function SidebarFilter<T extends FieldValues>({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps<T> ) {
   const { toggleSidebar} = useSidebar();
-  const filterForm = useForm({
+  const filterForm = useForm<T>({
     values: formValue,
   });
   const { handleSubmit } = filterForm;
@@ -35,7 +35,7 @@ export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig 
       page: 1,
       ...formValue,
     };
-    onFilterFormSubmit(filterParams);
+    onFilterFormSubmit(filterParams as T);
     toggleSidebar();
   });
 

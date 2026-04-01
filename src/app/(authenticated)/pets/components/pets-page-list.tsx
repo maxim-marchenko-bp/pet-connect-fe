@@ -17,6 +17,10 @@ import { useQuery } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
 import { PetType } from "@/domain/pet/pet-type.model";
 import { petListFilterForm } from "@/app/(authenticated)/pets/constants/pet-list-filter-form";
+import { paramsToForm } from "@/lib/form/params-to-form";
+import { formatDateForApi } from "@/lib/date/format-date-for-api";
+
+type PetFormData = Pick<Pet, 'type' | 'dateOfBirth'>;
 
 interface PetsPageListProps extends QueryOptions {
   canModify?: boolean;
@@ -42,6 +46,13 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, 
     queryKey: ['petType'],
     queryFn: () => clientFetch<PetType[]>('/pet-types')
   });
+  const filterFormSubmit = (updates: PetFormData) => {
+    const params = {
+      ...updates,
+      dateOfBirth: updates.dateOfBirth ? formatDateForApi(updates.dateOfBirth) : '',
+    };
+    setQueryParams(params);
+  };
   const petListFilterFormConfig = petListFilterForm.map(field => {
     if (field.name === 'type') {
       return {
@@ -89,13 +100,32 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, 
         </PageHeader>
 
         <PageContent>
-          <ListSearch formValue={{searchTerm: queryFilters.searchTerm as string}} totalCount={totalCount} onFilterFormSubmit={setQueryParams} />
+          <ListSearch
+            formValue={{searchTerm: queryFilters.searchTerm as string}}
+            totalCount={totalCount}
+            onFilterFormSubmit={setQueryParams}
+          />
           <div className="w-full flex justify-end">
-            <SidebarTrigger size="default" className="w-fit" label="Filter" variant="default" showIcon={false} useSizing={false}></SidebarTrigger>
+            <SidebarTrigger
+              size="default"
+              className="w-fit"
+              label="Filter"
+              variant="default"
+              showIcon={false}
+              useSizing={false}
+            ></SidebarTrigger>
           </div>
 
-          <SidebarFilter formValue={queryFilters} onFilterFormSubmit={setQueryParams} formFieldsConfig={petListFilterFormConfig} />
-          <PetsList pets={data} canModify={canModify} handleUnassignPet={handleUnassignPet} />
+          <SidebarFilter
+            formValue={paramsToForm<PetFormData>(queryFilters, petListFilterFormConfig)}
+            onFilterFormSubmit={filterFormSubmit}
+            formFieldsConfig={petListFilterFormConfig
+          } />
+          <PetsList
+            pets={data}
+            canModify={canModify}
+            handleUnassignPet={handleUnassignPet}
+          />
         </PageContent>
 
         <PageFooter>
