@@ -24,7 +24,7 @@ interface SidebarFilterProps<T> {
 }
 
 export function SidebarFilter<T extends FieldValues>({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps<T> ) {
-  const { toggleSidebar} = useSidebar();
+  const { toggleSidebar } = useSidebar();
   const filterForm = useForm<T>({
     values: formValue,
   });
