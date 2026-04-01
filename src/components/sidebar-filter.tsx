@@ -1,6 +1,6 @@
 'use client';
 
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, Path, useForm } from "react-hook-form";
 import {
   Sidebar,
   SidebarContent,
@@ -24,7 +24,7 @@ interface SidebarFilterProps<T> {
 }
 
 export function SidebarFilter<T extends FieldValues>({ formValue, onFilterFormSubmit, formFieldsConfig }: SidebarFilterProps<T> ) {
-  const { toggleSidebar } = useSidebar();
+  const { toggleSidebar, open } = useSidebar();
   const filterForm = useForm<T>({
     values: formValue,
   });
@@ -35,13 +35,19 @@ export function SidebarFilter<T extends FieldValues>({ formValue, onFilterFormSu
       page: 1,
       ...formValue,
     };
-    onFilterFormSubmit(filterParams as T);
+    onFilterFormSubmit(filterParams as unknown as T);
     toggleSidebar();
   });
 
   useEffect(() => {
-    filterForm.reset(formValue);
-  }, [formValue, filterForm]);
+    // TODO revisit this as form keeps its values even after reset
+    if (open) {
+      const filterFormValues = filterForm.getValues();
+      Object.keys(filterFormValues).forEach(key => {
+        filterForm.setValue(key as Path<T>, formValue[key] ?? null);
+      });
+    }
+  }, [open]);
 
   return (
     <Sidebar side="right" variant="floating" collapsible="offcanvas">
