@@ -48,7 +48,7 @@ export function SidebarFilter({ formValue, onFilterFormSubmit, formFieldsConfig 
       <SidebarHeader>
         <div className="flex justify-between items-center">
           <span className="text-xl">Filter</span>
-          <SidebarTrigger variant="ghost" icon={<XMarkIcon/>} onClick={() => filterForm.reset({...formValue})} />
+          <SidebarTrigger variant="ghost" icon={<XMarkIcon/>} onClick={() => filterForm.reset(formValue)} />
         </div>
       </SidebarHeader>
       <SidebarContent>
