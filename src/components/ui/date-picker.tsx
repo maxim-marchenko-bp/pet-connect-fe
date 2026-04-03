@@ -28,7 +28,7 @@ export function DatePicker({ name, rules, allowClear }: DatePickerProps) {
       name={name}
       rules={rules}
       render={({field, fieldState}) => (
-        <FormItem className="relative w-full max-w-xs">
+        <FormItem className="relative w-full">
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button

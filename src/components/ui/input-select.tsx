@@ -24,7 +24,7 @@ export function InputSelect<T extends FieldValues>({ name, selectOptions, rules,
       rules={rules}
       render={({ field, fieldState }) => {
         return (
-          <FormItem className="relative w-full max-w-xs">
+          <FormItem className="relative w-full">
             <Select
               {...field}
               onValueChange={(value) => {
