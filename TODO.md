@@ -1,6 +1,11 @@
-# Pets list
+# User page
+## Add pet
+- [ ] Add pet by invite code
 
+# User list
 ## Filtering
+- [ ] Date of birth date range filter
 
-- [ ] Add filtering by pet type (dog, cat, etc.)
-- [ ] Add filtering by pet date of birth
+# Pet list
+## Filtering
+- [ ] Date of birth date range filter
