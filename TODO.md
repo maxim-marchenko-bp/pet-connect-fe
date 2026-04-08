@@ -1,6 +1,6 @@
 # User page
 ## Add pet
-- [ ] Add pet by invite code
+- [x] Add pet by invite code
 
 # User list
 ## Filtering
