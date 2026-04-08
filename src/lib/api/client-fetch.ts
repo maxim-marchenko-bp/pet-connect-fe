@@ -2,13 +2,13 @@ import { getBaseUrl } from "@/lib/api/base-url";
 
 const API_BASE_URL = getBaseUrl();
 
-export async function clientFetch<T>(info: RequestInfo, init?: RequestInit, canRetry = true): Promise<T> {
+export async function clientFetch<T>(info: RequestInfo, init?: RequestInit, canRetry = true, fullUrl = false): Promise<T> {
   const opts: RequestInit = {
     ...init,
     credentials: 'include',
   };
 
-  const res = await fetch(`${API_BASE_URL}${info}`, opts);
+  const res = await fetch(fullUrl ? info : `${API_BASE_URL}${info}`, opts);
 
   // If 401 and haven't retried yet, try to refresh the token
   if (res.status === 401 && canRetry) {

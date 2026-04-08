@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { clientFetch } from "@/lib/api/client-fetch";
-import { PetInvite } from "@/domain/pet-invite/pet-invite.modell";
+import { PetInvitationToken } from "@/domain/pet-invite/pet-invite.model";
 import { toast } from "sonner";
 
 interface UseCopyLinkOptions {
@@ -10,7 +10,7 @@ interface UseCopyLinkOptions {
 export function useCopyLink({ petId }: UseCopyLinkOptions) {
   const { mutateAsync } = useMutation({
     mutationKey: ['pet-invite', petId],
-    mutationFn: () => clientFetch<PetInvite>(`/pet-invite/pets/${petId}/invites`, { method: 'POST' })
+    mutationFn: () => clientFetch<PetInvitationToken>(`/pet-invite/pets/${petId}/invites`, { method: 'POST' })
   });
 
   const handleCopy = async () => {

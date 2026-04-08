@@ -6,7 +6,7 @@ import { clientFetch } from "@/lib/api/client-fetch";
 import { useFormMutation } from "@/hooks/use-form-mutation";
 import { useRouter } from "next/navigation";
 import { Page, PageContent, PageHeader, PageHeaderSubtitle, PageHeaderTitle } from "@/components/ui/page";
-import { Card } from "@/components/ui/card";
+import { Card, CardTitle } from "@/components/ui/card";
 import { Form } from "@/components/ui/form";
 import { FormFieldRenderer } from "@/lib/form/form-field-renderer";
 import { petFormConfig } from "@/app/(authenticated)/pets/constants/pet-form";
@@ -15,6 +15,7 @@ import { FieldGroup } from "@/components/ui/field";
 import { FormFieldConfig } from "@/domain/form/form.type";
 import { useUser } from "@/hooks/use-user";
 import { usePetTypes } from "@/hooks/use-pet-types";
+import { PetInvitation } from "@/app/(authenticated)/pets/components/pet-invitation";
 
 export default function NewPetPage() {
   const { user } = useUser();
@@ -60,12 +61,13 @@ export default function NewPetPage() {
   return (
     <Page>
       <PageHeader>
-        <PageHeaderTitle>Create new pet</PageHeaderTitle>
-        <PageHeaderSubtitle>Fill information about your pet</PageHeaderSubtitle>
+        <PageHeaderTitle>Add new pet</PageHeaderTitle>
+        <PageHeaderSubtitle>Fill information about your pet or add by invitation link</PageHeaderSubtitle>
       </PageHeader>
 
       <PageContent>
-        <Card className="p-6">
+        <Card className="p-6 mb-6">
+          <CardTitle>Pet information</CardTitle>
           <Form {...form}>
             <form onSubmit={handleSubmit(handleFormSubmit)}>
               <FieldGroup>
@@ -77,6 +79,8 @@ export default function NewPetPage() {
             </form>
           </Form>
         </Card>
+
+        <PetInvitation />
       </PageContent>
     </Page>
   )
