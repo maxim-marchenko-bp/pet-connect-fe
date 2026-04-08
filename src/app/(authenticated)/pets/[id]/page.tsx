@@ -18,10 +18,12 @@ import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { CopyButton } from "@/components/ui/copy-button";
 import { ProfileCard } from "@/components/ui/profile-card";
 import { useCopyLink } from "@/app/(authenticated)/pets/hooks/use-copy-link";
+import { useFormattedDate } from "@/hooks/use-formatted-date";
 
 export default function PetPage() {
   const { id } = useParams();
   const router = useRouter();
+  const formatDate = useFormattedDate();
   const petId = id as string;
 
   const { data: pet, isLoading: isPetLoading, isError: isPetError, error: petError } = useQuery({
@@ -76,6 +78,7 @@ export default function PetPage() {
             <CardContent className="text-[14px] flex flex-col gap-2">
               <LabelValue label={'Name'} gridCols={2}>{pet.name}</LabelValue>
               <LabelValue label={'Type'} gridCols={2}>{pet.type.label}</LabelValue>
+              <LabelValue label={'Date of birth'} gridCols={2}>{pet.dateOfBirth ? formatDate(pet.dateOfBirth) : '-'}</LabelValue>
             </CardContent>
           </Card>
         </div>
