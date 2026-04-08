@@ -5,15 +5,16 @@ import { CheckCircleIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outl
 import { Button } from "@/components/ui/button";
 
 interface CopyButtonProps {
-  textToCopy: string;
+  handleCopy: () => Promise<string>;
   className?: string;
 }
 
-export function CopyButton({ textToCopy, className }: CopyButtonProps) {
+export function CopyButton({ handleCopy, className }: CopyButtonProps) {
   const [isCopied, setIsCopied] = useState(false);
 
-  const handleCopy = async () => {
-    await navigator.clipboard.writeText(textToCopy);
+  const copy = async () => {
+    const copyLink = await handleCopy();
+    await navigator.clipboard.writeText(copyLink);
     setIsCopied(true);
   };
 
@@ -26,7 +27,7 @@ export function CopyButton({ textToCopy, className }: CopyButtonProps) {
   }, [isCopied]);
 
   return (
-    <Button className={className} onClick={handleCopy}>
+    <Button className={className} onClick={copy}>
       <div className="flex justify-between items-center gap-2">
         {
           isCopied

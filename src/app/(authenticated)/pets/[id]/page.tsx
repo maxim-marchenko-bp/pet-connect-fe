@@ -15,9 +15,9 @@ import { FilteredItems } from "@/lib/api/filtered-items";
 import { PetDetailsUsers } from "@/app/(authenticated)/pets/components/pet-details-users";
 import { Button } from "@/components/ui/button";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
-import { getBaseUrl } from "@/lib/api/base-url";
 import { CopyButton } from "@/components/ui/copy-button";
 import { ProfileCard } from "@/components/ui/profile-card";
+import { useCopyLink } from "@/app/(authenticated)/pets/hooks/use-copy-link";
 
 export default function PetPage() {
   const { id } = useParams();
@@ -29,10 +29,7 @@ export default function PetPage() {
     queryFn: () => clientFetch<Pet>(`/pets/${petId}`),
   });
 
-  const getCopyText = () => {
-    const baseUrl = getBaseUrl();
-    return `${baseUrl}/users/join-pet?code=${petId}`;
-  };
+  const { handleCopy } = useCopyLink({ petId });
 
   const usersQuery = useQuery({
     queryKey: ['petUsers', petId],
@@ -70,7 +67,7 @@ export default function PetPage() {
                     </div>
                   </Button>
 
-                  <CopyButton textToCopy={getCopyText()} className="w-full mt-4" />
+                  <CopyButton handleCopy={handleCopy} className="w-full mt-4" />
                 </div>
             }
           </ProfileCard>
