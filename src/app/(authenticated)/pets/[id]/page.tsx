@@ -78,7 +78,7 @@ export default function PetPage() {
             <CardContent className="text-[14px] flex flex-col gap-2">
               <LabelValue label={'Name'} gridCols={2}>{pet.name}</LabelValue>
               <LabelValue label={'Type'} gridCols={2}>{pet.type.label}</LabelValue>
-              <LabelValue label={'Birth Date'} gridCols={2}>{pet.dateOfBirth ? formatDate(pet.dateOfBirth) : '-'}</LabelValue>
+              <LabelValue label={'Date of birth'} gridCols={2}>{pet.dateOfBirth ? formatDate(pet.dateOfBirth) : '-'}</LabelValue>
             </CardContent>
           </Card>
         </div>
