@@ -19,7 +19,7 @@ import { titleCase } from "@/lib/text-transform/titlecase";
 import { paramsToForm } from "@/lib/form/params-to-form";
 import { formatDateForApi } from "@/lib/date/format-date-for-api";
 
-type UserPageListFilterParams = Pick<User, 'dateOfBirth' | 'gender'> & { page: number }
+type UserPageListFilterParams = Pick<User, 'gender'> & { page: number, dateOfBirth: { from: Date, to: Date } };
 
 export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
   const {
@@ -39,12 +39,14 @@ export function UsersPageList({ path, queryKey, searchParams }: QueryOptions) {
     queryFn: () => clientFetch<Gender[]>('/genders')
   });
   const onFilterFormSubmit = (updates: UserPageListFilterParams) => {
+    const { dateOfBirth, ...rest } = updates;
     const params = {
-      ...updates,
-      dateOfBirth: updates.dateOfBirth ? formatDateForApi(updates.dateOfBirth) : '',
-    }
-    setQueryParams(params as Record<string, string | number>);
-  }
+      ...rest,
+      dateOfBirthFrom: dateOfBirth?.from ? formatDateForApi(dateOfBirth.from) : null,
+      dateOfBirthTo: dateOfBirth?.to ? formatDateForApi(dateOfBirth.to) : null,
+    };
+    setQueryParams(params);
+  };
   const filterFormConfig = userFilterFormConfig.map(field => {
     if (field.name === 'gender') {
       return {
