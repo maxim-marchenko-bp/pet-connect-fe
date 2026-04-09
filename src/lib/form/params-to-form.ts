@@ -1,8 +1,8 @@
 import { FormFieldConfig } from "@/domain/form/form.type";
 
 interface RangeFormValue {
-  from: Date;
-  to: Date;
+  from?: Date;
+  to?: Date;
 }
 
 export function paramsToForm<T>(
@@ -16,24 +16,46 @@ export function paramsToForm<T>(
   );
 
   Object.entries(queryParams).forEach(([key, value]) => {
-    const baseKey = key.replace(/(From|To)$/, '');
-    const config = configMap[baseKey];
+    let baseKey = key;
+    let isFrom = false;
+    let isTo = false;
 
+    // Detect range keys ONLY if config confirms it
+    if (key.endsWith("From")) {
+      const candidate = key.slice(0, -4);
+      if (configMap[candidate]?.type === "dateRange") {
+        baseKey = candidate;
+        isFrom = true;
+      }
+    } else if (key.endsWith("To")) {
+      const candidate = key.slice(0, -2);
+      if (configMap[candidate]?.type === "dateRange") {
+        baseKey = candidate;
+        isTo = true;
+      }
+    }
+
+    const config = configMap[baseKey];
     if (!config) return;
 
     switch (config.type) {
-      case 'date':
+      case "date":
         formValues[baseKey] = new Date(value);
         break;
 
-      case 'dateRange':
+      case "dateRange":
+        // ignore invalid shape like ?dateOfBirth=...
+        if (!isFrom && !isTo) return;
+
         if (!formValues[baseKey]) {
           formValues[baseKey] = {} as RangeFormValue;
         }
 
-        if (key.endsWith('From')) {
+        if (isFrom) {
           (formValues[baseKey] as RangeFormValue).from = new Date(value);
-        } else if (key.endsWith('To')) {
+        }
+
+        if (isTo) {
           (formValues[baseKey] as RangeFormValue).to = new Date(value);
         }
         break;
