@@ -20,7 +20,7 @@ import { petListFilterForm } from "@/app/(authenticated)/pets/constants/pet-list
 import { paramsToForm } from "@/lib/form/params-to-form";
 import { formatDateForApi } from "@/lib/date/format-date-for-api";
 
-type PetFormData = Pick<Pet, 'type' | 'dateOfBirth'>;
+type PetFormData = Pick<Pet, 'type'> & { dateOfBirth: { from: Date, to: Date } };
 
 interface PetsPageListProps extends QueryOptions {
   canModify?: boolean;
@@ -47,9 +47,11 @@ export function PetsPageList({ path, queryKey, searchParams, canModify, canAdd, 
     queryFn: () => clientFetch<PetType[]>('/pet-types')
   });
   const filterFormSubmit = (updates: PetFormData) => {
+    const { dateOfBirth, ...rest } = updates;
     const params = {
-      ...updates,
-      dateOfBirth: updates.dateOfBirth ? formatDateForApi(updates.dateOfBirth) : '',
+      ...rest,
+      dateOfBirthFrom: dateOfBirth?.from ? formatDateForApi(dateOfBirth.from) : null,
+      dateOfBirthTo: dateOfBirth?.to ? formatDateForApi(dateOfBirth.to) : null,
     };
     setQueryParams(params);
   };

@@ -9,7 +9,7 @@ export const petListFilterForm: FormFieldConfig[] = [
   },
   {
     name: 'dateOfBirth',
-    type: 'date',
+    type: 'dateRange',
     placeholder: 'Select date',
     allowClear: true,
   },
